@@ -9,6 +9,6 @@ namespace SocialNetwork.Models
 {
     public class User : IdentityUser
     {
-        public List<Post> Posts { get; set; } = new List<Post>();
+        public List<Post> Posts { get; set; }
     }
 }
