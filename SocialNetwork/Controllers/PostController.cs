@@ -67,5 +67,17 @@ namespace SocialNetwork.Controllers
             return Ok(post.ToPostDto());
         }
         
+        [HttpDelete]
+        [Route("{id:int}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            if(!ModelState.IsValid) return BadRequest(ModelState);
+
+            var post = await _postRepo.DeleteAsync(id);
+
+            if(post == null) return NotFound();
+
+            return NoContent();
+        }
     }
 }

@@ -43,9 +43,13 @@ namespace SocialNetwork.Repository
             return post;
         }
 
-        public Task<Post> DeleteAsync(Post post)
+        public async Task<Post> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var postModel = await _context.Posts.FirstOrDefaultAsync(p => p.Id == id);
+            if(postModel == null) return null;
+            _context.Posts.Remove(postModel);
+            await _context.SaveChangesAsync();
+            return postModel;
         }
 
         public async Task<Post> UpdateAsync(int id, UpdatePostDto post)

@@ -13,6 +13,6 @@ namespace SocialNetwork.Interfaces
         Task<Post> GetByIdAsync(int id);
         Task<Post> CreateAsync(Post post);
         Task<Post> UpdateAsync(int id, UpdatePostDto post);
-        Task<Post> DeleteAsync(Post post);
+        Task<Post> DeleteAsync(int id);
     }
 }
