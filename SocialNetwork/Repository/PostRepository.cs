@@ -47,7 +47,10 @@ namespace SocialNetwork.Repository
         {
             var postModel = await _context.Posts.FirstOrDefaultAsync(p => p.Id == id);
             if(postModel == null) return null;
-            _context.Posts.Remove(postModel);
+
+            postModel.DeletedAt = DateTime.Now;
+            postModel.IsDeleted = true;
+            
             await _context.SaveChangesAsync();
             return postModel;
         }
@@ -58,7 +61,8 @@ namespace SocialNetwork.Repository
 
             if(existingPost == null) return null;
 
-            existingPost.Content = post.Content;    
+            existingPost.Content = post.Content;
+            existingPost.UpdatedAt = DateTime.Now; 
 
             await _context.SaveChangesAsync();
 

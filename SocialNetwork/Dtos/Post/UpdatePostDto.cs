@@ -11,5 +11,7 @@ namespace SocialNetwork.Dtos.Post
         [Required]
         [MaxLength(2560, ErrorMessage = "Maximum length for the content is 2560 characters.")]
         public string Content { get; set; }
+        public DateTime UpdatedAt { get; set; }
+
     }
 }
