@@ -39,7 +39,7 @@ namespace SocialNetwork.Controllers
             if(post == null) return NotFound();
             return Ok(post);
         }
-        
+
         [HttpPost]
 
         public async Task<IActionResult> Create([FromBody] CreatePostDto post)
@@ -53,5 +53,19 @@ namespace SocialNetwork.Controllers
             return CreatedAtAction(nameof(GetById), new {id = newPost.Id}, newPost.ToPostDto());
 
         }
+
+        [HttpPut]
+        [Route("{id:int}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdatePostDto updateDto)
+        {
+            if(!ModelState.IsValid) return BadRequest(ModelState);
+
+            var post = await _postRepo.UpdateAsync(id, updateDto);
+
+            if(post == null) return NotFound();
+
+            return Ok(post.ToPostDto());
+        }
+        
     }
 }

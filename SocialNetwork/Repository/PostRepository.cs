@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SocialNetwork.Data;
+using SocialNetwork.Dtos.Post;
 using SocialNetwork.Interfaces;
 using SocialNetwork.Models;
 
@@ -47,9 +48,17 @@ namespace SocialNetwork.Repository
             throw new NotImplementedException();
         }
 
-        public Task<Post> UpdateAsync(Post post)
+        public async Task<Post> UpdateAsync(int id, UpdatePostDto post)
         {
-            throw new NotImplementedException();
+            var existingPost = await _context.Posts.FirstOrDefaultAsync(p => p.Id == id);
+
+            if(existingPost == null) return null;
+
+            existingPost.Content = post.Content;    
+
+            await _context.SaveChangesAsync();
+
+            return existingPost;
         }
     }
 }
