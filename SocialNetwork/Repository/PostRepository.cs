@@ -16,6 +16,7 @@ namespace SocialNetwork.Repository
         {
             _context = context;
         }
+
         public async Task<List<Post>> GetAllAsync()
         {
             var posts = await _context.Posts.ToListAsync();
@@ -23,6 +24,32 @@ namespace SocialNetwork.Repository
             if(posts == null) return null;
             
             return posts;
+        }
+
+        public async Task<Post> GetByIdAsync(int id)
+        {
+            var post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == id);
+
+            if(post == null) return null;
+            
+            return post;
+        }
+
+        public async Task<Post> CreateAsync(Post post)
+        {
+            await _context.Posts.AddAsync(post);
+            await _context.SaveChangesAsync();
+            return post;
+        }
+
+        public Task<Post> DeleteAsync(Post post)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Post> UpdateAsync(Post post)
+        {
+            throw new NotImplementedException();
         }
     }
 }

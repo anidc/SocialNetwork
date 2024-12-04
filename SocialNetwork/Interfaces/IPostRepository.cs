@@ -9,5 +9,9 @@ namespace SocialNetwork.Interfaces
     public interface IPostRepository
     {
         Task<List<Post>> GetAllAsync();
+        Task<Post> GetByIdAsync(int id);
+        Task<Post> CreateAsync(Post post);
+        Task<Post> UpdateAsync(Post post);
+        Task<Post> DeleteAsync(Post post);
     }
 }
