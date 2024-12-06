@@ -10,10 +10,10 @@ namespace SocialNetwork.Data
 {
     public class ApplicationDBContext : IdentityDbContext<User>
     {
-        public ApplicationDBContext(DbContextOptions dbContextOptions) 
+        public ApplicationDBContext(DbContextOptions dbContextOptions)
         : base(dbContextOptions)
         {
-            
+
         }
 
         public DbSet<User> Users { get; set; }

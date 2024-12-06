@@ -14,6 +14,7 @@ namespace SocialNetwork.Mappers
         {
             return new PostDto 
             { 
+                Id = post.Id,
                 Content = post.Content
             };
         }

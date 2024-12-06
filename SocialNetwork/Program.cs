@@ -6,6 +6,7 @@ using SocialNetwork.Data;
 using SocialNetwork.Interfaces;
 using SocialNetwork.Models;
 using SocialNetwork.Repository;
+using SocialNetwork.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,6 +49,11 @@ builder.Services.AddAuthentication(options => {
 });
 
 builder.Services.AddScoped<IPostRepository, PostRepository>();
+builder.Services.AddScoped<IPostService, PostService>();
+
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+builder.Services.AddScoped<ICommentService, CommentService>();
+
 
 var app = builder.Build();
 

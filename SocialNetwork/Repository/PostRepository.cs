@@ -13,60 +13,60 @@ namespace SocialNetwork.Repository
     public class PostRepository : IPostRepository
     {
         private readonly ApplicationDBContext _context;
+
         public PostRepository(ApplicationDBContext context)
         {
             _context = context;
         }
 
-        public async Task<List<Post>> GetAllAsync()
+        public async Task<List<Post>> GetAllPostsAsync()
         {
-            var posts = await _context.Posts.ToListAsync();
-
-            if(posts == null) return null;
+            var posts = await _context.Posts.Where(p=> p.IsDeleted != true).ToListAsync();
             
             return posts;
         }
 
-        public async Task<Post> GetByIdAsync(int id)
+        public async Task<Post?> GetByIdAsync(int id)
         {
-            var post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == id);
-
-            if(post == null) return null;
-            
+            var post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == id && p.IsDeleted != true);
+    
             return post;
         }
 
-        public async Task<Post> CreateAsync(Post post)
+        public async Task<bool> CreateAsync(Post post)
         {
             await _context.Posts.AddAsync(post);
-            await _context.SaveChangesAsync();
-            return post;
+            var changes = await _context.SaveChangesAsync();
+            
+            return changes > 0;
         }
 
-        public async Task<Post> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
             var postModel = await _context.Posts.FirstOrDefaultAsync(p => p.Id == id);
-            if(postModel == null) return null;
+            if(postModel == null) return false;
 
             postModel.DeletedAt = DateTime.Now;
             postModel.IsDeleted = true;
             
-            await _context.SaveChangesAsync();
-            return postModel;
+            return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<Post> UpdateAsync(int id, UpdatePostDto post)
+        public async Task<bool> UpdateAsync(Post post)
         {
-            var existingPost = await _context.Posts.FirstOrDefaultAsync(p => p.Id == id);
+            var existingPostEntity = await _context.Posts.FirstOrDefaultAsync(p => p.Id == post.Id);
 
-            if(existingPost == null) return null;
+            if(existingPostEntity == null) throw new Exception("");
 
-            existingPost.Content = post.Content;
-            existingPost.UpdatedAt = DateTime.Now; 
+            existingPostEntity.Content = post.Content;
+            existingPostEntity.UpdatedAt = DateTime.Now; 
 
-            await _context.SaveChangesAsync();
+            return (await _context.SaveChangesAsync()) > 0;
+        }
 
-            return existingPost;
+        public Task<bool> PostExists(int id)
+        {
+            return _context.Posts.AnyAsync(p => p.Id == id);
         }
     }
 }

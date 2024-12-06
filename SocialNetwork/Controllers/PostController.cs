@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SocialNetwork.Data;
 using SocialNetwork.Dtos.Post;
+using SocialNetwork.Helpers;
 using SocialNetwork.Interfaces;
 using SocialNetwork.Mappers;
 using SocialNetwork.Models;
@@ -16,68 +17,64 @@ namespace SocialNetwork.Controllers
     [ApiController]
     public class PostController : ControllerBase
     {
-        private readonly IPostRepository _postRepo;
-        public PostController(IPostRepository postRepository)
+        private readonly IPostService _postService;
+
+        public PostController(IPostService postService)
         {
-            _postRepo = postRepository;
+            _postService = postService;
         }
 
         [HttpGet]
-
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAllPosts()
         {
-            var posts = await _postRepo.GetAllAsync();
+            var posts = await _postService.GetAllPostsAsync();
             return Ok(posts);
         }
 
-        [HttpGet("{id:int}")] 
-
-        public async Task<IActionResult> GetById([FromRoute] int id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetPostById(int id)
         {
-            if(!ModelState.IsValid) return BadRequest(ModelState);
-            var post = await _postRepo.GetByIdAsync(id);
-            if(post == null) return NotFound();
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var post = await _postService.GetPostByIdAsync(id);
+            if (post == null) return NotFound();
             return Ok(post);
         }
 
         [HttpPost]
-
-        public async Task<IActionResult> Create([FromBody] CreatePostDto post)
+        public async Task<IActionResult> CreatePost([FromBody] CreatePostDto createPostDto)
         {
-            if(!ModelState.IsValid) return BadRequest(ModelState);
-            
-            var newPost = post.ToPostFromPostDto();
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            await _postRepo.CreateAsync(newPost);
+            // var userId = UserHelper.GetUserId(User);
+            var userId = 1;
 
-            return CreatedAtAction(nameof(GetById), new {id = newPost.Id}, newPost.ToPostDto());
+            var result = await _postService.CreatePostAsync(createPostDto, userId);
 
+            return Ok(result);
         }
 
-        [HttpPut]
-        [Route("{id:int}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdatePostDto updateDto)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdatePost(int id, [FromBody] UpdatePostDto updateDto)
         {
-            if(!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var post = await _postRepo.UpdateAsync(id, updateDto);
+            var result = await _postService.UpdatePostAsync(id, updateDto);
 
-            if(post == null) return NotFound();
+            if (!result) return BadRequest();
 
-            return Ok(post.ToPostDto());
+            return Ok(result);
         }
-        
-        [HttpDelete]
-        [Route("{id:int}")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePost(int id)
         {
-            if(!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var post = await _postRepo.DeleteAsync(id);
+            var result = await _postService.DeletePostAsync(id);
 
-            if(post == null) return NotFound();
+            if (!result) return BadRequest();
 
-            return NoContent();
+            return Ok(result);
         }
     }
 }

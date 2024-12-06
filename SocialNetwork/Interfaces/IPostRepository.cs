@@ -2,17 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SocialNetwork.Dtos.Post;
 using SocialNetwork.Models;
 
 namespace SocialNetwork.Interfaces
 {
     public interface IPostRepository
     {
-        Task<List<Post>> GetAllAsync();
-        Task<Post> GetByIdAsync(int id);
-        Task<Post> CreateAsync(Post post);
-        Task<Post> UpdateAsync(int id, UpdatePostDto post);
-        Task<Post> DeleteAsync(int id);
+        Task<List<Post>> GetAllPostsAsync();
+        Task<Post?> GetByIdAsync(int id);
+        Task<bool> CreateAsync(Post post);
+        Task<bool> UpdateAsync(Post post);
+        Task<bool> DeleteAsync(int id);
+        Task<bool> PostExists(int id);
     }
 }
