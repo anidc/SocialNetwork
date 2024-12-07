@@ -40,6 +40,7 @@ namespace SocialNetwork.Repository
             if (existingComment == null) throw new Exception("");
 
             existingComment.Text = comment.Text;
+            existingComment.UpdatedAt = DateTime.Now;
 
             return (await _context.SaveChangesAsync()) > 0;
         }
