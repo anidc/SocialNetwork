@@ -10,6 +10,7 @@ namespace SocialNetwork.Mappers
         {
             return new CommentDto
             {
+                Id = comment.Id,
                 PostId = comment.PostId,
                 Text = comment.Text,
             };
@@ -30,6 +31,14 @@ namespace SocialNetwork.Mappers
             {
                 Text = commentDto.Text,
                 PostId = postId
+            };
+        }
+
+        public static Comment ToCommentFromUpdate(this UpdateCommentDto commentDto)
+        {
+            return new Comment
+            {
+                Text = commentDto.Text
             };
         }
     }

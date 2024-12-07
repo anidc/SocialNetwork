@@ -33,5 +33,15 @@ namespace SocialNetwork.Repository
             return comments;
         }
 
+        public async Task<bool> UpdateCommentAsync(int id, Comment comment)
+        {
+            var existingComment = await _context.Comments.FirstOrDefaultAsync(c => c.Id == id);
+
+            if (existingComment == null) throw new Exception("");
+
+            existingComment.Text = comment.Text;
+
+            return (await _context.SaveChangesAsync()) > 0;
+        }
     }
 }

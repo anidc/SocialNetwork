@@ -41,9 +41,11 @@ namespace SocialNetwork.Services
             return await _commentRepository.CreateCommentAsync(comment);
         }
 
-        public Task<bool> UpdateCommentAsync(int id, UpdateCommentDto updateDto)
+        public async Task<bool> UpdateCommentAsync(int id, UpdateCommentDto updateDto)
         {
-            var comment = _commentRepository.
+            var update = CommentMapper.ToCommentFromUpdate(updateDto);
+
+            return await _commentRepository.UpdateCommentAsync(id, update); 
         }
     }
 }
