@@ -55,5 +55,10 @@ namespace SocialNetwork.Repository
 
             return (await _context.SaveChangesAsync()) > 0;
         }
+
+        public async Task<Comment?> GetCommentByIdAsync(int commentId)
+        {
+            return await _context.Comments.FirstOrDefaultAsync(c => c.Id == commentId && c.IsDeleted == false);
+        }
     }
 }
