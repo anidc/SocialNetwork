@@ -11,5 +11,6 @@ namespace SocialNetwork.Interfaces
         Task<List<Comment>> GetAllCommentsAsync();
         Task<bool> CreateCommentAsync(Comment comment);
         Task<bool> UpdateCommentAsync(int id, Comment comment);
+        Task<bool> DeleteCommentAsync(int id);
     }
 }

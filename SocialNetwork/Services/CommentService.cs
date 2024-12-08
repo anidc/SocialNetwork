@@ -47,5 +47,10 @@ namespace SocialNetwork.Services
 
             return await _commentRepository.UpdateCommentAsync(id, update); 
         }
+
+        public async Task<bool> DeleteCommentAsync(int id)
+        {
+            return await _commentRepository.DeleteCommentAsync(id);
+        }
     }
 }

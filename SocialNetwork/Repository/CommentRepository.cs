@@ -37,10 +37,21 @@ namespace SocialNetwork.Repository
         {
             var existingComment = await _context.Comments.FirstOrDefaultAsync(c => c.Id == id);
 
-            if (existingComment == null) throw new Exception("");
+            if (existingComment == null) throw new Exception("Comment with this id doesnt exist");
 
             existingComment.Text = comment.Text;
             existingComment.UpdatedAt = DateTime.Now;
+
+            return (await _context.SaveChangesAsync()) > 0;
+        }
+
+        public async Task<bool> DeleteCommentAsync(int id)
+        {
+            var existingComment = await _context.Comments.FirstOrDefaultAsync(c => c.Id == id);
+
+            if (existingComment == null) throw new Exception("Comment with this id doesnt exist");
+            existingComment.IsDeleted = true;
+            existingComment.DeletedAt = DateTime.Now;
 
             return (await _context.SaveChangesAsync()) > 0;
         }

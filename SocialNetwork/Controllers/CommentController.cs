@@ -56,5 +56,15 @@ namespace SocialNetwork.Controllers
 
             return Ok(comment);
         }
+
+        [HttpDelete("{commentId}")]
+        public async Task<IActionResult> DeleteComment(int commentId)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var comment = await _commentService.DeleteCommentAsync(commentId);
+
+            return Ok(comment);
+        }
     }
 }
