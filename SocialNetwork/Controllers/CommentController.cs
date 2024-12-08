@@ -1,14 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using SocialNetwork.Dtos.Comment;
 using SocialNetwork.Interfaces;
-using SocialNetwork.Mappers;
-using SocialNetwork.Models;
-using SocialNetwork.Repository;
 
 namespace SocialNetwork.Controllers
 {
@@ -17,11 +9,10 @@ namespace SocialNetwork.Controllers
     public class CommentController : ControllerBase
     {
         private readonly ICommentService _commentService;
-        private readonly IPostService _postService;
-        public CommentController(ICommentService commentService, IPostService postService)
+
+        public CommentController(ICommentService commentService)
         {
             _commentService = commentService;
-            _postService = postService;
         }
 
         [HttpGet]
@@ -52,7 +43,10 @@ namespace SocialNetwork.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var comment = await _commentService.UpdateCommentAsync(commentId, updateCommentDto);
+            // var userId = UserHelper.GetUserId(User);
+            var userId = 1;
+
+            var comment = await _commentService.UpdateCommentAsync(commentId, updateCommentDto, userId);
 
             return Ok(comment);
         }
