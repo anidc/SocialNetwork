@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FirstCast.Application.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
 using SocialNetwork.Dtos;
 using SocialNetwork.Dtos.Post;
@@ -41,7 +42,7 @@ namespace SocialNetwork.Services
         {
             var post = await _postRepository.GetByIdAsync(id);
 
-            if (post == null) throw new Exception("Post doesn't exist");
+            if (post == null) throw ExceptionManager.NotFound(nameof(Post), id.ToString());
 
             return post.ToPostDto();
         }
@@ -50,7 +51,7 @@ namespace SocialNetwork.Services
         {
             var postEntity = await _postRepository.GetByIdAsync(id);
 
-            if (postEntity == null) throw new Exception("");
+            if (postEntity == null) throw ExceptionManager.NotFound(nameof(Post), id.ToString());
 
             postEntity.Content = updateDto.Content;
 
@@ -61,14 +62,14 @@ namespace SocialNetwork.Services
         {
             var post = await _postRepository.GetByIdAsync(id);
 
-            if (post == null) throw new Exception("");
+            if (post == null) throw ExceptionManager.NotFound(nameof(Post), id.ToString());
 
             return await _postRepository.DeleteAsync(id);
         }
 
         public async Task<bool> PostExists(int id)
         {
-            return await _postRepository.PostExists(id);
+            return await _postRepository.GetByIdAsync(id) != null;
         }
     }
 }

@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using FirstCast.Application.Services;
+using Microsoft.AspNetCore.Http.HttpResults;
 using SocialNetwork.Dtos.Comment;
 using SocialNetwork.Interfaces;
 using SocialNetwork.Mappers;
+using SocialNetwork.Models;
 
 namespace SocialNetwork.Services
 {
@@ -31,7 +33,7 @@ namespace SocialNetwork.Services
 
             if (!await _postService.PostExists(postId))
             {
-                throw new Exception("Stock doesn't exist");
+                throw ExceptionManager.NotFound(nameof(Post), postId.ToString());
             }
 
             var comment = CommentMapper.ToCommentFromCreate(createCommentDto, postId);
@@ -41,11 +43,17 @@ namespace SocialNetwork.Services
             return await _commentRepository.CreateCommentAsync(comment);
         }
 
-        public async Task<bool> UpdateCommentAsync(int id, UpdateCommentDto updateDto)
+        public async Task<bool> UpdateCommentAsync(int commentId, UpdateCommentDto updateDto, int userId)
         {
+            var comment = await _commentRepository.GetCommentByIdAsync(commentId);
+
+            if (comment == null) throw ExceptionManager.NotFound(nameof(Comment), commentId.ToString());
+
+            if (comment.userId != userId) throw ExceptionManager.AccessDenied();
+
             var update = CommentMapper.ToCommentFromUpdate(updateDto);
 
-            return await _commentRepository.UpdateCommentAsync(id, update); 
+            return await _commentRepository.UpdateCommentAsync(commentId, update); 
         }
 
         public async Task<bool> DeleteCommentAsync(int id)
