@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SocialNetwork.Dtos.Post;
+using SocialNetwork.Helpers;
 using SocialNetwork.Interfaces;
 
 namespace SocialNetwork.Controllers
@@ -36,8 +37,7 @@ namespace SocialNetwork.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            // var userId = UserHelper.GetUserId(User);
-            var userId = 1;
+            var userId = ClaimsHelper.GetUserId(User);
 
             var result = await _postService.CreatePostAsync(createPostDto, userId);
 

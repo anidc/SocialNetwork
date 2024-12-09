@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SocialNetwork.Dtos.Comment;
+using SocialNetwork.Helpers;
 using SocialNetwork.Interfaces;
 
 namespace SocialNetwork.Controllers
@@ -18,20 +19,20 @@ namespace SocialNetwork.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllComments()
         {
-            if(!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var comments = await _commentService.GetAllCommentsAsync();
-            
+
             return Ok(comments);
         }
 
         [HttpPost("{postId}")]
-        public async Task<IActionResult> CreateComment([FromRoute] int postId, [FromBody] CreateCommentDto createCommentDto)
+        public async Task<IActionResult> CreateComment([FromRoute] int postId,
+            [FromBody] CreateCommentDto createCommentDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            
-            // var userId = UserHelper.GetUserId(User);
-            var userId = 1;
+
+            var userId = ClaimsHelper.GetUserId(User);
 
             var result = await _commentService.CreateCommentAsync(createCommentDto, userId, postId);
 
@@ -39,12 +40,12 @@ namespace SocialNetwork.Controllers
         }
 
         [HttpPut("{commentId}")]
-        public async Task<IActionResult> UpdateComment([FromRoute] int commentId, [FromBody] UpdateCommentDto updateCommentDto)
+        public async Task<IActionResult> UpdateComment([FromRoute] int commentId,
+            [FromBody] UpdateCommentDto updateCommentDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            // var userId = UserHelper.GetUserId(User);
-            var userId = 1;
+            var userId = ClaimsHelper.GetUserId(User);
 
             var comment = await _commentService.UpdateCommentAsync(commentId, updateCommentDto, userId);
 

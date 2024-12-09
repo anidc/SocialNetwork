@@ -1,5 +1,4 @@
 ﻿using FirstCast.Application.Services;
-using Microsoft.AspNetCore.Http.HttpResults;
 using SocialNetwork.Dtos.Comment;
 using SocialNetwork.Interfaces;
 using SocialNetwork.Mappers;
@@ -28,32 +27,31 @@ namespace SocialNetwork.Services
             return commentDto;
         }
 
-        public async Task<bool> CreateCommentAsync(CreateCommentDto createCommentDto, int userId, int postId)
+        public async Task<bool> CreateCommentAsync(CreateCommentDto createCommentDto, string userId, int postId)
         {
-
             if (!await _postService.PostExists(postId))
             {
                 throw ExceptionManager.NotFound(nameof(Post), postId.ToString());
             }
 
-            var comment = CommentMapper.ToCommentFromCreate(createCommentDto, postId);
+            var comment = createCommentDto.ToCommentFromCreate(postId);
 
             //comment.UserId = userId;
 
             return await _commentRepository.CreateCommentAsync(comment);
         }
 
-        public async Task<bool> UpdateCommentAsync(int commentId, UpdateCommentDto updateDto, int userId)
+        public async Task<bool> UpdateCommentAsync(int commentId, UpdateCommentDto updateDto, string userId)
         {
             var comment = await _commentRepository.GetCommentByIdAsync(commentId);
 
             if (comment == null) throw ExceptionManager.NotFound(nameof(Comment), commentId.ToString());
 
-            if (comment.userId != userId) throw ExceptionManager.AccessDenied();
+            if (comment.UserId != userId) throw ExceptionManager.AccessDenied();
 
-            var update = CommentMapper.ToCommentFromUpdate(updateDto);
+            var update = updateDto.ToCommentFromUpdate();
 
-            return await _commentRepository.UpdateCommentAsync(commentId, update); 
+            return await _commentRepository.UpdateCommentAsync(commentId, update);
         }
 
         public async Task<bool> DeleteCommentAsync(int id)

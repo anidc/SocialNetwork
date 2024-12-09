@@ -1,15 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using FirstCast.Application.Services;
-using Microsoft.AspNetCore.Http.HttpResults;
 using SocialNetwork.Dtos;
 using SocialNetwork.Dtos.Post;
 using SocialNetwork.Interfaces;
 using SocialNetwork.Mappers;
 using SocialNetwork.Models;
-using SocialNetwork.Repository;
 
 namespace SocialNetwork.Services
 {
@@ -22,13 +16,14 @@ namespace SocialNetwork.Services
             _postRepository = postRepository;
         }
 
-        public async Task<bool> CreatePostAsync(CreatePostDto createPostDto, int userId)
+        public async Task<bool> CreatePostAsync(CreatePostDto createPostDto, string userId)
         {
             var post = PostMapper.ToPostFromPostDto(createPostDto);
             //post.UserId = userId;
 
             return await _postRepository.CreateAsync(post);
         }
+
         public async Task<List<PostDto>> GetAllPostsAsync()
         {
             var posts = await _postRepository.GetAllPostsAsync();
