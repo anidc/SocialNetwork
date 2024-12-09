@@ -9,13 +9,15 @@ namespace SocialNetwork.Services
     public class AccountService : IAccountService
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly ITokenService _tokenService;
 
-        public AccountService(UserManager<AppUser> userManager)
+        public AccountService(UserManager<AppUser> userManager, ITokenService tokenService)
         {
             _userManager = userManager;
+            _tokenService = tokenService;
         }
 
-        public async Task<bool> RegisterUser(RegisterDto registerDto)
+        public async Task<NewUserDto> RegisterUser(RegisterDto registerDto)
         {
             var appUser = new AppUser
             {
@@ -30,7 +32,13 @@ namespace SocialNetwork.Services
                 var roleResult = await _userManager.AddToRoleAsync(appUser, "User");
                 if (roleResult.Succeeded)
                 {
-                    return true;
+                    return
+                        new NewUserDto
+                        {
+                            Username = appUser.UserName,
+                            Email = appUser.Email,
+                            Token = _tokenService.CreateToken(appUser)
+                        };
                 }
                 else
                 {

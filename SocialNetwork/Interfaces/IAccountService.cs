@@ -4,6 +4,6 @@ namespace SocialNetwork.Interfaces
 {
     public interface IAccountService
     {
-        Task<bool> RegisterUser(RegisterDto registerDto);
+        Task<NewUserDto> RegisterUser(RegisterDto registerDto);
     }
 }
