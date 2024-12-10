@@ -9,6 +9,6 @@ namespace SocialNetwork.Interfaces
         //Task<CommentDto?> GetCommentByIdAsync(int id);
         Task<bool> CreateCommentAsync(CreateCommentDto createCommentDto, string userId, int postId);
         Task<bool> UpdateCommentAsync(int commentId, UpdateCommentDto updateDto, string userId);
-        Task<bool> DeleteCommentAsync(int commentId);
+        Task<bool> DeleteCommentAsync(int commentId, string userId);
     }
 }

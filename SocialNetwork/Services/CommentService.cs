@@ -36,7 +36,7 @@ namespace SocialNetwork.Services
 
             var comment = createCommentDto.ToCommentFromCreate(postId);
 
-            //comment.UserId = userId;
+            comment.UserId = userId;
 
             return await _commentRepository.CreateCommentAsync(comment);
         }
@@ -54,9 +54,13 @@ namespace SocialNetwork.Services
             return await _commentRepository.UpdateCommentAsync(commentId, update);
         }
 
-        public async Task<bool> DeleteCommentAsync(int id)
+        public async Task<bool> DeleteCommentAsync(int commentId, string userId)
         {
-            return await _commentRepository.DeleteCommentAsync(id);
+            var comment = await _commentRepository.GetCommentByIdAsync(commentId);
+
+            if (comment.UserId != userId) throw ExceptionManager.AccessDenied();
+
+            return await _commentRepository.DeleteCommentAsync(commentId);
         }
     }
 }

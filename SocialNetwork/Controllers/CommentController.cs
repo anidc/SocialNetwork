@@ -1,3 +1,5 @@
+using FirstCast.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SocialNetwork.Dtos.Comment;
 using SocialNetwork.Helpers;
@@ -27,12 +29,14 @@ namespace SocialNetwork.Controllers
         }
 
         [HttpPost("{postId}")]
+        [Authorize]
         public async Task<IActionResult> CreateComment([FromRoute] int postId,
             [FromBody] CreateCommentDto createCommentDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var userId = ClaimsHelper.GetUserId(User);
+            if (string.IsNullOrEmpty(userId)) throw ExceptionManager.NotAuthorized();
 
             var result = await _commentService.CreateCommentAsync(createCommentDto, userId, postId);
 
@@ -40,12 +44,14 @@ namespace SocialNetwork.Controllers
         }
 
         [HttpPut("{commentId}")]
+        [Authorize]
         public async Task<IActionResult> UpdateComment([FromRoute] int commentId,
             [FromBody] UpdateCommentDto updateCommentDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var userId = ClaimsHelper.GetUserId(User);
+            if (string.IsNullOrEmpty(userId)) throw ExceptionManager.NotAuthorized();
 
             var comment = await _commentService.UpdateCommentAsync(commentId, updateCommentDto, userId);
 
@@ -53,11 +59,15 @@ namespace SocialNetwork.Controllers
         }
 
         [HttpDelete("{commentId}")]
+        [Authorize]
         public async Task<IActionResult> DeleteComment(int commentId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var comment = await _commentService.DeleteCommentAsync(commentId);
+            var userId = ClaimsHelper.GetUserId(User);
+            if (string.IsNullOrEmpty(userId)) throw ExceptionManager.NotAuthorized();
+
+            var comment = await _commentService.DeleteCommentAsync(commentId, userId);
 
             return Ok(comment);
         }
