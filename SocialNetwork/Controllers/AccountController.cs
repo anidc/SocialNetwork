@@ -15,6 +15,16 @@ namespace SocialNetwork.Controllers
             _accountService = accountService;
         }
 
+        [HttpPost("login")]
+        public async Task<IActionResult> LoginUser(LoginDto loginDto)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var result = await _accountService.LoginUser(loginDto);
+
+            return Ok(result);
+        }
+
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterDto registerDto)
         {

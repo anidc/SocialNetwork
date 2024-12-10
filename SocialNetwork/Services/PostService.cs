@@ -18,8 +18,10 @@ namespace SocialNetwork.Services
 
         public async Task<bool> CreatePostAsync(CreatePostDto createPostDto, string userId)
         {
-            var post = PostMapper.ToPostFromPostDto(createPostDto);
-            //post.UserId = userId;
+            if (createPostDto == null)
+                throw new ArgumentNullException(nameof(createPostDto), "Post data cannot be null.");
+            var post = createPostDto.ToPostFromPostDto();
+            post.UserId = userId;
 
             return await _postRepository.CreateAsync(post);
         }
@@ -42,22 +44,24 @@ namespace SocialNetwork.Services
             return post.ToPostDto();
         }
 
-        public async Task<bool> UpdatePostAsync(int id, UpdatePostDto updateDto)
+        public async Task<bool> UpdatePostAsync(int id, UpdatePostDto updateDto, string userId)
         {
             var postEntity = await _postRepository.GetByIdAsync(id);
 
             if (postEntity == null) throw ExceptionManager.NotFound(nameof(Post), id.ToString());
-
+            if (postEntity.UserId != userId) throw ExceptionManager.AccessDenied();
             postEntity.Content = updateDto.Content;
 
             return await _postRepository.UpdateAsync(postEntity);
         }
 
-        public async Task<bool> DeletePostAsync(int id)
+        public async Task<bool> DeletePostAsync(int id, string userId)
         {
             var post = await _postRepository.GetByIdAsync(id);
 
             if (post == null) throw ExceptionManager.NotFound(nameof(Post), id.ToString());
+
+            if (post.UserId != userId) throw ExceptionManager.AccessDenied();
 
             return await _postRepository.DeleteAsync(id);
         }

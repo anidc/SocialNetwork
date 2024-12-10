@@ -1,3 +1,5 @@
+using FirstCast.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SocialNetwork.Dtos.Post;
 using SocialNetwork.Helpers;
@@ -33,11 +35,13 @@ namespace SocialNetwork.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreatePost([FromBody] CreatePostDto createPostDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var userId = ClaimsHelper.GetUserId(User);
+            if (string.IsNullOrEmpty(userId)) throw ExceptionManager.NotAuthorized();
 
             var result = await _postService.CreatePostAsync(createPostDto, userId);
 
@@ -45,11 +49,15 @@ namespace SocialNetwork.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdatePost(int id, [FromBody] UpdatePostDto updateDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var result = await _postService.UpdatePostAsync(id, updateDto);
+            var userId = ClaimsHelper.GetUserId(User);
+            if (string.IsNullOrEmpty(userId)) throw ExceptionManager.NotAuthorized();
+
+            var result = await _postService.UpdatePostAsync(id, updateDto, userId);
 
             if (!result) return BadRequest();
 
@@ -57,11 +65,15 @@ namespace SocialNetwork.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeletePost(int id)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var result = await _postService.DeletePostAsync(id);
+            var userId = ClaimsHelper.GetUserId(User);
+            if (string.IsNullOrEmpty(userId)) throw ExceptionManager.NotAuthorized();
+
+            var result = await _postService.DeletePostAsync(id, userId);
 
             if (!result) return BadRequest();
 

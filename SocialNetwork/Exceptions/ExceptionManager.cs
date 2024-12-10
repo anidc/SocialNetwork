@@ -1,14 +1,13 @@
-﻿
-using SocialNetwork.Exceptions;
+﻿using SocialNetwork.Exceptions;
 
 namespace FirstCast.Application.Services;
 
 public static class ExceptionManager
 {
     public static BaseException NotAuthorized()
-        => GetException(ResponseCode.NotAuthorized, "Not authorized");
+        => GetException(ResponseCode.NotAuthorized, "User is not authorized");
 
-    public static BaseException AccessDenied() 
+    public static BaseException AccessDenied()
         => GetException(ResponseCode.AccessDenied, "No access to perform this action");
 
     public static BaseException NotFound(string entityName, string? id = null)

@@ -6,14 +6,17 @@ namespace SocialNetwork.Helpers
     {
         public static string GetUserId(ClaimsPrincipal claimsPrincipal)
         {
+            if (claimsPrincipal == null)
+                throw new ArgumentNullException(nameof(claimsPrincipal), "ClaimsPrincipal cannot be null.");
+
             var userId = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (!Guid.TryParse(userId, out var guid))
+            if (!string.IsNullOrEmpty(userId) && Guid.TryParse(userId, out _))
             {
-                return guid.ToString();
+                return userId;
             }
 
-            throw new InvalidOperationException("No user id");
+            throw new InvalidOperationException("The user ID claim is missing or invalid.");
         }
     }
 }
