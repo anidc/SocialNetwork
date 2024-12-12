@@ -4,7 +4,7 @@ using SocialNetwork.Interfaces;
 
 namespace SocialNetwork.Controllers
 {
-    [Route("api/controller")]
+    [Route("api/account")]
     [ApiController]
     public class AccountController : ControllerBase
     {

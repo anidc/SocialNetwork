@@ -1,29 +1,41 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { UserService } from '../../services/User.service';
+import { AccountService } from '../../services/account.service';
+import { TokenResponse } from '../../interfaces/token';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: false,
-  
+
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
 })
 export class LoginComponent {
-
   loginForm = new FormGroup({
     username: new FormControl('', Validators.required),
     password: new FormControl('', Validators.required),
   });
 
-  constructor(private userService: UserService) { }
-  ngOnInit() { }
+  constructor(
+    private userService: AccountService,
+    private readonly router: Router
+  ) {}
+  ngOnInit() {}
   onSubmit() {
-    this.userService.login(this.loginForm.value.username!, this.loginForm.value.password!).subscribe(response => {
-      console.log(response);
-      // localStorage.setItem('token', response.token);
-    }
-    );
-  }
+    this.userService
+      .login(this.loginForm.value.username!, this.loginForm.value.password!)
+      .subscribe({
+        next: (response: TokenResponse) => {
+          localStorage.setItem('token', response.token);
 
+          if (response.token) {
+            this.router.navigate(['/home']);
+          }
+        },
+        error: (error) => {
+          alert(error.error.toString());
+        }
+      });
+  }
 }

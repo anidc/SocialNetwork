@@ -61,7 +61,7 @@ namespace SocialNetwork.Services
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginDto.Username.ToLower());
 
-            if (user == null) throw ExceptionManager.NotAuthorized();
+            if (user == null) throw ExceptionManager.BadRequest("Username or password is incorrect!");
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
