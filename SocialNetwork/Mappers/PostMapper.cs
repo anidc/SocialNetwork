@@ -15,7 +15,11 @@ namespace SocialNetwork.Mappers
             return new PostDto 
             { 
                 Id = post.Id,
-                Content = post.Content
+                Content = post.Content,
+                Likes = post.Likes,
+                User = post.User.ToUserDto(),
+                CreatedAt = post.CreatedAt,
+                UpdatedAt = post.UpdatedAt
             };
         }
         public static Post ToPostFromPostDto(this CreatePostDto postDto) 

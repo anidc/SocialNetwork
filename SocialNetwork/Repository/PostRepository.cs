@@ -21,14 +21,17 @@ namespace SocialNetwork.Repository
 
         public async Task<List<Post>> GetAllPostsAsync()
         {
-            var posts = await _context.Posts.Where(p=> p.IsDeleted != true).ToListAsync();
+            var posts = await _context.Posts
+                .Include(u => u.User)
+                .Where(p=> !p.IsDeleted)
+                .ToListAsync();
             
             return posts;
         }
 
         public async Task<Post?> GetByIdAsync(int id)
         {
-            var post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == id && p.IsDeleted != true);
+            var post = await _context.Posts.Include(u => u.User).FirstOrDefaultAsync(p => p.Id == id && p.IsDeleted != true);
     
             return post;
         }

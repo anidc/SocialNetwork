@@ -7,7 +7,7 @@ namespace SocialNetwork.Interfaces
     {
         Task<bool> CreatePostAsync(CreatePostDto createPostDto, string userId);
         Task<List<PostDto>> GetAllPostsAsync();
-        Task<PostDto?> GetPostByIdAsync(int id);
+        Task<PostDto> GetPostByIdAsync(int id);
         Task<bool> UpdatePostAsync(int id, UpdatePostDto updateDto, string userId);
         Task<bool> DeletePostAsync(int id, string userId);
         Task<bool> PostExists(int id);

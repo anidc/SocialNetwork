@@ -35,7 +35,7 @@ namespace SocialNetwork.Services
             return postDtos.ToList();
         }
 
-        public async Task<PostDto?> GetPostByIdAsync(int id)
+        public async Task<PostDto> GetPostByIdAsync(int id)
         {
             var post = await _postRepository.GetByIdAsync(id);
 
