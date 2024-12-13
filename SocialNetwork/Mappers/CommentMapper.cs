@@ -13,6 +13,9 @@ namespace SocialNetwork.Mappers
                 Id = comment.Id,
                 PostId = comment.PostId,
                 Text = comment.Text,
+                User = comment.User.ToUserDto(),
+                UpdatedAt = comment.UpdatedAt,
+                CreatedAt = comment.CreatedAt
             };
         }
 

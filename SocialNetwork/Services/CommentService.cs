@@ -27,6 +27,15 @@ namespace SocialNetwork.Services
             return commentDto;
         }
 
+        public async Task<List<CommentDto>> GetAllCommentsByPostAsync(int postId)
+        {
+            var comment = await _commentRepository.GetAllCommentsByPostAsync(postId);
+
+            var commentDto = comment.Select(c => c.ToCommentDto()).ToList();
+
+            return commentDto;
+        }
+
         public async Task<bool> CreateCommentAsync(CreateCommentDto createCommentDto, string userId, int postId)
         {
             if (!await _postService.PostExists(postId))

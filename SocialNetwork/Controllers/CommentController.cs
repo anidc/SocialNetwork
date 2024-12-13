@@ -28,6 +28,16 @@ namespace SocialNetwork.Controllers
             return Ok(comments);
         }
 
+        [HttpGet("{postId}")]
+        public async Task<IActionResult> GetAllCommentsByPost(int postId)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var comments = await _commentService.GetAllCommentsByPostAsync(postId);
+
+            return Ok(comments);
+        }
+
         [HttpPost("{postId}")]
         [Authorize]
         public async Task<IActionResult> CreateComment([FromRoute] int postId,

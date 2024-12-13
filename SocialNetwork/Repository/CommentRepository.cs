@@ -33,6 +33,13 @@ namespace SocialNetwork.Repository
             return comments;
         }
 
+        public async Task<List<Comment>> GetAllCommentsByPostAsync(int postId)
+        {
+            var comments = await _context.Comments.Include(p => p.User).Where(p => p.IsDeleted != true && p.PostId == postId).ToListAsync();
+
+            return comments;
+        }
+
         public async Task<bool> UpdateCommentAsync(int id, Comment comment)
         {
             var existingComment = await _context.Comments.FirstOrDefaultAsync(c => c.Id == id);

@@ -5,6 +5,7 @@ namespace SocialNetwork.Interfaces
     public interface ICommentService
     {
         Task<List<CommentDto>> GetAllCommentsAsync();
+        Task<List<CommentDto>> GetAllCommentsByPostAsync(int postId);
 
         //Task<CommentDto?> GetCommentByIdAsync(int id);
         Task<bool> CreateCommentAsync(CreateCommentDto createCommentDto, string userId, int postId);

@@ -9,6 +9,7 @@ namespace SocialNetwork.Interfaces
     public interface ICommentRepository
     {
         Task<List<Comment>> GetAllCommentsAsync();
+        Task<List<Comment>> GetAllCommentsByPostAsync(int postId);
         Task<bool> CreateCommentAsync(Comment comment);
         Task<bool> UpdateCommentAsync(int id, Comment comment);
         Task<bool> DeleteCommentAsync(int id);
