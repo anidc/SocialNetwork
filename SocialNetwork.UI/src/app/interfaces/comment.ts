@@ -1,8 +1,7 @@
-export interface Post {
+export interface Comment {
   id: number;
   content: string;
-  likes: number;
-  user: Object &{
+  user: Object & {
     id: number;
     username: string;
     email: string;

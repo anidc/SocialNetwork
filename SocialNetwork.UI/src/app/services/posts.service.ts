@@ -13,4 +13,15 @@ export class PostsService {
   getAllPosts(): Observable<Post[]> {
     return this.http.get<Post[]>(`${environment.serverUrl}/api/post`);
   }
+
+  getPostById(id: number): Observable<Post> {
+    return this.http.get<Post>(`${environment.serverUrl}/api/post/${id}`);
+  }
+
+  updatePost(post: Post): Observable<Post> {
+    return this.http.put<Post>(
+      `${environment.serverUrl}/api/post/${post.id}`,
+      post
+    );
+  }
 }
