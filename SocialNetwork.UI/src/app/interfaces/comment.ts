@@ -1,6 +1,6 @@
 export interface Comment {
   id: number;
-  content: string;
+  text: string;
   user: Object & {
     id: number;
     username: string;

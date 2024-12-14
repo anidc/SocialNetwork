@@ -9,6 +9,17 @@
         <button (click)="likePost(post.id)">Like</button>
         <button (click)="showComments(post.id)">Comments</button>
       </div>
+      <div class="comments" *ngIf="activePostId === post.id">
+        <div *ngFor="let comment of comments">
+          <div class="comment">
+            <div class="comment-content">
+              <p class="comment-user">{{ comment.user.username }}</p>
+              <p class="comment-text">{{ comment.text }}</p>
+            </div>
+            <p class="comment-date"><span>{{ comment.updatedAt != null ? "edited": "" }} {{ comment.createdAt | date: 'HH:mm dd/MM/yyyy' }}</span></p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

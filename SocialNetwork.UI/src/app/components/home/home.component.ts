@@ -14,6 +14,8 @@ import { Comment } from '../../interfaces/comment';
 export class HomeComponent {
   posts!: Post[];
   comments!: Comment[];
+  activePostId: number | null = null;
+
   constructor(private readonly postService: PostsService, private readonly commentsService: CommentsService) {
     this.getAllPosts();
   }
@@ -34,8 +36,15 @@ export class HomeComponent {
   }
 
   showComments(postId: number) {
-    this.commentsService.getAllCommentsByPost(postId).subscribe((comments) => {
-      console.log(comments);
-    })
+if (this.activePostId === postId) {
+      this.activePostId = null; 
+      this.comments = [];
+    } else {
+      this.activePostId = postId;
+      this.commentsService.getAllCommentsByPost(postId).subscribe((newComments: Comment[]) => {
+        this.comments = newComments;
+        console.log(this.comments);
+      });
+    }
   }
 }
