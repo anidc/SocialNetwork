@@ -51,13 +51,13 @@ namespace SocialNetwork.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "4391203f-e474-4859-969f-3349403e1332",
+                            Id = "262bbbec-38ae-4d97-9123-54f0c8628f9e",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "23cb866e-a80f-40b7-843b-dfe3d5479976",
+                            Id = "b8dccb2c-21bd-45bb-8551-d15af384549e",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -297,8 +297,9 @@ namespace SocialNetwork.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Likes")
-                        .HasColumnType("int");
+                    b.Property<string>("Likes")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");

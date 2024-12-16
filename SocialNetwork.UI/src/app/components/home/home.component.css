@@ -9,7 +9,7 @@
 .home-post {
     background-color: #fff;
     border-radius: 12px;
-    padding: 20px 20px;
+    padding: 20px 20px 0px 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: relative;
     h3 {
@@ -24,6 +24,55 @@
         font-size: 12px;
         span {
             opacity: 0.5;
+        }
+    }
+
+    .buttons {
+        display: flex;
+        gap: 30px;
+        margin-top: 20px;
+        margin-left: 10px;
+        margin-right: 10px;
+        border-top: 1px solid #ccc;
+
+        button {
+            padding: 10px 0;
+            margin: 5px;
+            width: 50%;
+            border: none;
+            border-radius: 5px;
+            color: #747474;
+            font-weight: 500;
+            background-color: transparent;
+            cursor: pointer;
+            transition: 0.3s;
+            &:hover {
+                background-color: #f1f1f1;
+            }
+        }
+    }
+
+    .comment {
+        position: relative;
+        background-color: #F0F2F5;
+        width: fit-content;
+        padding: 10px;
+
+        .comment-user {
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .comment-text {
+            font-size: 14px;
+        }
+
+        .comment-date {
+            font-size: 12px;
+            span {
+                opacity: 0.5;
+            }
+    
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using FirstCast.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +22,10 @@ namespace SocialNetwork.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllPosts()
         {
-            var posts = await _postService.GetAllPostsAsync();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null) throw ExceptionManager.NotAuthorized();
+                
+            var posts = await _postService.GetAllPostsAsync(userId);
             return Ok(posts);
         }
 
@@ -30,12 +34,12 @@ namespace SocialNetwork.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var post = await _postService.GetPostByIdAsync(id);
-            if (post == null) return NotFound();
+
             return Ok(post);
         }
 
-        [HttpPost]
         [Authorize]
+        [HttpPost]
         public async Task<IActionResult> CreatePost([FromBody] CreatePostDto createPostDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -48,8 +52,8 @@ namespace SocialNetwork.Controllers
             return Ok(result);
         }
 
-        [HttpPut("{id}")]
         [Authorize]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdatePost(int id, [FromBody] UpdatePostDto updateDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -64,8 +68,8 @@ namespace SocialNetwork.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("{id}")]
         [Authorize]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePost(int id)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -76,6 +80,17 @@ namespace SocialNetwork.Controllers
             var result = await _postService.DeletePostAsync(id, userId);
 
             if (!result) return BadRequest();
+
+            return Ok(result);
+        }
+
+        [Authorize]
+        [HttpPost("{postId}/like")]
+        public async Task<IActionResult> TogglePost(int postId)
+        {
+            var userId = ClaimsHelper.GetUserId(User);
+
+            var result = await _postService.ToggleLike(postId, userId);
 
             return Ok(result);
         }

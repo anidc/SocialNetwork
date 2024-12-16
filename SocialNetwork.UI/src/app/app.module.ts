@@ -6,21 +6,34 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AccountService } from './services/account.service';
-import { HttpClientModule } from '@angular/common/http';
+import {
+  HttpClientModule,
+  provideHttpClient,
+  withInterceptors,
+} from '@angular/common/http';
 import { RegisterComponent } from './components/register/register.component';
 import { RouterModule } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { tokenInterceptor } from './interceptor/token-interceptor';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, RegisterComponent, HomeComponent],
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    RegisterComponent,
+    HomeComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
     RouterModule,
-    HttpClientModule,
+    ToastrModule.forRoot(),
+    BrowserAnimationsModule,
   ],
-  providers: [],
+  providers: [provideHttpClient(withInterceptors([tokenInterceptor]))],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

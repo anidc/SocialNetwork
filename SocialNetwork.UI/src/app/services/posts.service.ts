@@ -24,4 +24,9 @@ export class PostsService {
       post
     );
   }
+
+  toggleLike(postId: number): Observable<boolean> {
+    return this.http.post<boolean>(
+      `${environment.serverUrl}/api/post/${postId}/like`, {})
+    };
 }

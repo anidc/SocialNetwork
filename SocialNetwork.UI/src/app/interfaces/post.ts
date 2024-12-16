@@ -1,12 +1,11 @@
+import { User } from "./user";
+
 export interface Post {
   id: number;
   content: string;
   likes: number;
-  user: Object &{
-    id: number;
-    username: string;
-    email: string;
-  };
+  user: User;
+  isLikedByCurrentUser : boolean;
   createdAt: Date;
   updatedAt: Date;
 }

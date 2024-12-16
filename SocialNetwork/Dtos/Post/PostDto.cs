@@ -13,6 +13,7 @@ namespace SocialNetwork.Dtos
         public int Id { get; set; }
         public string Content { get; set; }
         public int Likes { get; set; }
+        public bool IsLikedByCurrentUser { get; set; }
         public UserDto? User { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }

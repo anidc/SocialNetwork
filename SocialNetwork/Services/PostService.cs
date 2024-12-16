@@ -26,12 +26,17 @@ namespace SocialNetwork.Services
             return await _postRepository.CreateAsync(post);
         }
 
-        public async Task<List<PostDto>> GetAllPostsAsync()
+        public async Task<List<PostDto>> GetAllPostsAsync(string userId)
         {
             var posts = await _postRepository.GetAllPostsAsync();
-
-            var postDtos = posts.Select(p => p.ToPostDto());
-
+            
+            var postDtos = posts.Select(p =>
+            {
+                var dto = p.ToPostDto();
+                dto.IsLikedByCurrentUser = p.Likes.Contains(Guid.Parse(userId));
+                return dto;
+            });
+            
             return postDtos.ToList();
         }
 
@@ -69,6 +74,33 @@ namespace SocialNetwork.Services
         public async Task<bool> PostExists(int id)
         {
             return await _postRepository.GetByIdAsync(id) != null;
+        }
+
+        public async Task<bool> ToggleLike(int postId, string userId)
+        {
+            var userGuid = Guid.Parse(userId);
+            var post = await _postRepository.GetByIdAsync(postId);
+
+            if (post == null) throw ExceptionManager.NotFound(nameof(Post), postId.ToString());
+            
+            if (post.Likes.Contains(userGuid))
+            {
+                post.Likes.Remove(userGuid);
+            }
+            else
+            {
+                post.Likes.Add(userGuid);
+            }
+
+            return await _postRepository.UpdateAsync(post);
+
+            // getam post
+            // provjerim da li u likes ima trenutni user
+            // ako nema dodam 
+            // ako ima izbrisem 
+
+            // return true ako je uspjelo ili false ako nije (throwamo exception)
+
         }
     }
 }

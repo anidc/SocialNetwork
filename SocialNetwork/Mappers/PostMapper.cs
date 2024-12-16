@@ -16,7 +16,7 @@ namespace SocialNetwork.Mappers
             { 
                 Id = post.Id,
                 Content = post.Content,
-                Likes = post.Likes,
+                Likes = post.Likes.Count,
                 User = post.User.ToUserDto(),
                 CreatedAt = post.CreatedAt,
                 UpdatedAt = post.UpdatedAt
