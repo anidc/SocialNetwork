@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SocialNetwork.Dtos.Account;
 using SocialNetwork.Interfaces;
+using SocialNetwork.Mappers;
 using SocialNetwork.Models;
 
 namespace SocialNetwork.Services
@@ -73,6 +74,15 @@ namespace SocialNetwork.Services
                 Email = user.Email,
                 Token = _tokenService.CreateToken(user)
             };
+        }
+
+        public async Task<UserDto> GetUserByIdAsync(string userId)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+
+            if (user == null) throw ExceptionManager.BadRequest("Something went wrong.");
+
+            return user.ToUserDto();
         }
     }
 }

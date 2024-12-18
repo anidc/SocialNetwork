@@ -26,7 +26,8 @@ namespace SocialNetwork.Mappers
         {
             return new Post 
             { 
-                Content = postDto.Content
+                Content = postDto.Content,
+                Likes = new List<Guid>()
             };
         } 
     }

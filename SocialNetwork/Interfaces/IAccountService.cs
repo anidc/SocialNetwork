@@ -6,5 +6,6 @@ namespace SocialNetwork.Interfaces
     {
         Task<NewUserDto> RegisterUser(RegisterDto registerDto);
         Task<NewUserDto> LoginUser(LoginDto loginDto);
+        Task<UserDto> GetUserByIdAsync(string userId);
     }
 }

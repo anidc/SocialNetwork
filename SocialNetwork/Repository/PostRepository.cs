@@ -24,6 +24,7 @@ namespace SocialNetwork.Repository
             var posts = await _context.Posts
                 .Include(u => u.User)
                 .Where(p=> !p.IsDeleted)
+                .OrderByDescending(p => p.CreatedAt)
                 .ToListAsync();
             
             return posts;

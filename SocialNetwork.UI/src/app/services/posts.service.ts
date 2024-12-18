@@ -25,8 +25,14 @@ export class PostsService {
     );
   }
 
+  createPost(post: Post): Observable<Post> {
+    return this.http.post<Post>(`${environment.serverUrl}/api/post`, post);
+  }
+
   toggleLike(postId: number): Observable<boolean> {
     return this.http.post<boolean>(
-      `${environment.serverUrl}/api/post/${postId}/like`, {})
-    };
+      `${environment.serverUrl}/api/post/${postId}/like`,
+      {}
+    );
+  }
 }

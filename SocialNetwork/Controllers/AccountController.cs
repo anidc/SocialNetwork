@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FirstCast.Application.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SocialNetwork.Dtos.Account;
+using SocialNetwork.Helpers;
 using SocialNetwork.Interfaces;
 
 namespace SocialNetwork.Controllers
@@ -33,6 +36,19 @@ namespace SocialNetwork.Controllers
             await _accountService.RegisterUser(registerDto);
 
             return Ok("User registered succesfully");
+        }
+
+        [Authorize]
+        [HttpGet("me")]
+        public async Task<IActionResult> GetMe()
+        {
+            var userId = ClaimsHelper.GetUserId(User);
+
+            if (userId == null) throw ExceptionManager.NotAuthorized();
+
+            var result = await _accountService.GetUserByIdAsync(userId);
+
+            return Ok(result);
         }
     }
 }

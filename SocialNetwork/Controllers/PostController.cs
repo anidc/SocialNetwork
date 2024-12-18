@@ -23,8 +23,7 @@ namespace SocialNetwork.Controllers
         public async Task<IActionResult> GetAllPosts()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null) throw ExceptionManager.NotAuthorized();
-                
+            
             var posts = await _postService.GetAllPostsAsync(userId);
             return Ok(posts);
         }

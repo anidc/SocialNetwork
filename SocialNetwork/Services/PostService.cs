@@ -26,17 +26,18 @@ namespace SocialNetwork.Services
             return await _postRepository.CreateAsync(post);
         }
 
-        public async Task<List<PostDto>> GetAllPostsAsync(string userId)
+        public async Task<List<PostDto>> GetAllPostsAsync(string? userId)
         {
             var posts = await _postRepository.GetAllPostsAsync();
-            
+
             var postDtos = posts.Select(p =>
             {
                 var dto = p.ToPostDto();
-                dto.IsLikedByCurrentUser = p.Likes.Contains(Guid.Parse(userId));
+                if (userId != null)
+                    dto.IsLikedByCurrentUser = p.Likes.Contains(Guid.Parse(userId));
                 return dto;
             });
-            
+
             return postDtos.ToList();
         }
 
@@ -82,7 +83,7 @@ namespace SocialNetwork.Services
             var post = await _postRepository.GetByIdAsync(postId);
 
             if (post == null) throw ExceptionManager.NotFound(nameof(Post), postId.ToString());
-            
+
             if (post.Likes.Contains(userGuid))
             {
                 post.Likes.Remove(userGuid);
@@ -100,7 +101,6 @@ namespace SocialNetwork.Services
             // ako ima izbrisem 
 
             // return true ako je uspjelo ili false ako nije (throwamo exception)
-
         }
     }
 }
