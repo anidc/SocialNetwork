@@ -17,6 +17,8 @@ import { HomeComponent } from './components/home/home.component';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { tokenInterceptor } from './interceptor/token-interceptor';
+import { MenuComponent } from './components/menu/menu.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -24,6 +26,7 @@ import { tokenInterceptor } from './interceptor/token-interceptor';
     LoginComponent,
     RegisterComponent,
     HomeComponent,
+    MenuComponent,
   ],
   imports: [
     BrowserModule,
@@ -32,6 +35,7 @@ import { tokenInterceptor } from './interceptor/token-interceptor';
     RouterModule,
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
+    MatIconModule,
   ],
   providers: [provideHttpClient(withInterceptors([tokenInterceptor]))],
   bootstrap: [AppComponent],

@@ -1,0 +1,26 @@
+<div class="navbar flex flex-row justify-between align-center h-20 px-3">
+  <div
+    class="logo font-bold text-4xl flex items-center cursor-pointer"
+    routerLink="/home"
+  >
+    Social Network
+  </div>
+
+  <div class="account flex items-center gap-3">
+    <div *ngIf="accountService.CurrentUser$ | async as currentUser">
+      Hello, {{ currentUser.username }}.
+    </div>
+    <button *ngIf="!(accountService.CurrentUser$ | async)" routerLink="/login">
+      Login
+    </button>
+    <button *ngIf="accountService.CurrentUser$ | async" (click)="logout()">
+      Logout
+    </button>
+    <button
+      *ngIf="!(accountService.CurrentUser$ | async)"
+      routerLink="/register"
+    >
+      Register
+    </button>
+  </div>
+</div>
