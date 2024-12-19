@@ -6,6 +6,7 @@ import { Comment } from '../../interfaces/comment';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AccountService } from '../../services/account.service';
 import { ToastrService } from 'ngx-toastr';
+import { PostItem } from '../../interfaces/post-item';
 
 @Component({
   selector: 'app-home',
@@ -15,10 +16,9 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './home.component.css',
 })
 export class HomeComponent {
-  posts!: Post[];
+  postItems!: PostItem[];
   postForm!: FormGroup;
-  comments!: Comment[];
-  activePostId: number | null = null;
+  commentForm!: FormGroup;
   isAuthenticated = false;
 
   constructor(
@@ -30,12 +30,20 @@ export class HomeComponent {
   ) {
     this.getAllPosts();
     this.initPublishPost();
+    this.initPublishComment();
     this.isAuthenticated = this.accountService.isUserAuthenticated();
   }
 
   getAllPosts() {
     this.postService.getAllPosts().subscribe((posts) => {
-      this.posts = posts;
+      this.postItems = posts.map(
+        (post) =>
+          ({
+            post: post,
+            isCommentListOpen: false,
+            comments: [],
+          } as PostItem)
+      );
     });
   }
 
@@ -45,6 +53,34 @@ export class HomeComponent {
     });
   }
 
+  initPublishComment() {
+    this.commentForm = this.formBuilder.group({
+      text: ['', [Validators.required, Validators.maxLength(2560)]],
+    });
+  }
+
+  publishComment(postId: number) {
+    if (this.commentForm.invalid) {
+      console.log('Invalid comment');
+      return;
+    }
+
+    this.commentsService
+      .createComment(postId, this.commentForm.value)
+      .subscribe({
+        next: (comment) => {
+          this.postItems
+            .find((postItem) => postItem.post.id === postId)!
+            .comments.push(comment);
+          this.commentForm.reset();
+          this.showComments(postId);
+          this.showComments(postId);
+        },
+        error: (error) => {
+          this.toastr.error(error.error.toString());
+        },
+      });
+  }
   publishPost() {
     if (this.postForm.invalid) {
       console.log('Invalid post');
@@ -53,7 +89,6 @@ export class HomeComponent {
 
     const newPost: any = {
       content: this.postForm.value.content,
-      likes: 0,
     };
 
     this.postService.createPost(newPost).subscribe({
@@ -68,7 +103,10 @@ export class HomeComponent {
   }
   likePost(postId: number) {
     this.postService.toggleLike(postId).subscribe((response) => {
-      var post = this.posts.find((post) => post.id === postId);
+      var post = this.postItems.find(
+        (postItem) => postItem.post.id === postId
+      )?.post;
+
       post!.isLikedByCurrentUser = !post!.isLikedByCurrentUser;
 
       if (post!.isLikedByCurrentUser) {
@@ -80,16 +118,16 @@ export class HomeComponent {
   }
 
   showComments(postId: number) {
-    if (this.activePostId === postId) {
-      this.activePostId = null;
-      this.comments = [];
-    } else {
-      this.activePostId = postId;
-      this.commentsService
-        .getAllCommentsByPost(postId)
-        .subscribe((newComments: Comment[]) => {
-          this.comments = newComments;
-        });
-    }
+    var postItem = this.postItems.find(
+      (postItem) => postItem.post.id === postId
+    );
+
+    postItem!.isCommentListOpen = !postItem!.isCommentListOpen;
+
+    this.commentsService
+      .getAllCommentsByPost(postId)
+      .subscribe((newComments: Comment[]) => {
+        postItem!.comments = newComments;
+      });
   }
 }

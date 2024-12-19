@@ -17,65 +17,73 @@
       </button>
     </form>
   </div>
-  <div *ngFor="let post of posts">
+  <div *ngFor="let postItem of postItems">
     <div class="home-post">
       <div class="content relative">
-        <h3>{{ post.user.username }}</h3>
-        <p class="mt-4">{{ post.content }}</p>
+        <h3>{{ postItem.post.user.username }}</h3>
+        <p class="mt-4">{{ postItem.post.content }}</p>
         <div class="dots">
           <mat-icon>more_vert</mat-icon>
         </div>
         <p class="date">
           <span
-            >{{ post.updatedAt != null ? "edited" : "" }}
-            {{ post.createdAt | date : "HH:mm dd/MM/yyyy" }}</span
+            >{{ postItem.post.updatedAt != null ? "edited" : "" }}
+            {{ postItem.post.createdAt | date : "HH:mm dd/MM/yyyy" }}</span
           >
         </p>
-        <p class="likes text-sm text-gray-500 mt-5">{{ post.likes }} likes</p>
+        <p class="likes text-sm text-gray-500 mt-5">
+          {{ postItem.post.likes }} likes
+        </p>
       </div>
       <div class="buttons">
         <button
           class="custom-button"
-          *ngIf="!post.isLikedByCurrentUser"
-          (click)="likePost(post.id)"
+          *ngIf="!postItem.post.isLikedByCurrentUser"
+          (click)="likePost(postItem.post.id)"
         >
           Like
         </button>
         <button
           class="custom-button"
-          *ngIf="post.isLikedByCurrentUser"
-          (click)="likePost(post.id)"
+          *ngIf="postItem.post.isLikedByCurrentUser"
+          (click)="likePost(postItem.post.id)"
         >
           Dislike
         </button>
-        <button class="custom-button" (click)="showComments(post.id)">
+        <button class="custom-button" (click)="showComments(postItem.post.id)">
           Comments
         </button>
       </div>
-      <div class="comments" *ngIf="activePostId === post.id">
-        <div *ngFor="let comment of comments">
-          <div class="comment">
-            <div class="comment-content">
-              <p class="comment-user">{{ comment.user.username }}</p>
-              <p class="comment-text">{{ comment.text }}</p>
+      <div class="comments" *ngIf="postItem.isCommentListOpen">
+        <div class="comments-list">
+          <div *ngFor="let comment of postItem.comments">
+            <div class="comment">
+              <div class="comment-content">
+                <p class="comment-user">{{ comment.user.username }}</p>
+                <p class="comment-text">{{ comment.text }}</p>
+              </div>
+              <p class="comment-date">
+                <span
+                  >{{ comment.updatedAt != null ? "edited" : "" }}
+                  {{ comment.createdAt | date : "HH:mm dd/MM/yyyy" }}</span
+                >
+              </p>
             </div>
-            <p class="comment-date">
-              <span
-                >{{ comment.updatedAt != null ? "edited" : "" }}
-                {{ comment.createdAt | date : "HH:mm dd/MM/yyyy" }}</span
-              >
-            </p>
           </div>
         </div>
-        <form [formGroup]="commentForm" (ngSubmit)="onSubmit(post.id)">
-          <div class="form-control">
-            <textarea
-              placeholder="Add a comment"
-              type="text"
-              formControlName="text"
-            ></textarea>
-          </div>
-          <button class="custom-button" type="submit">Add Comment</button>
+        <form
+          class="comment-form flex flex-row align-center"
+          [formGroup]="commentForm"
+          (ngSubmit)="publishComment(postItem.post.id)"
+        >
+          <textarea
+            placeholder="Add a comment"
+            type="text"
+            formControlName="text"
+          ></textarea>
+          <button class="custom-button" type="submit">
+            <mat-icon>keyboard_arrow_up</mat-icon>
+          </button>
         </form>
       </div>
     </div>

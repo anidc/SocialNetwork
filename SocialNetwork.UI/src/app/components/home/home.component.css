@@ -78,10 +78,17 @@
     }
   }
   .comments {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
     padding-bottom: 10px;
+    .comments-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-bottom: 10px;
+      padding-right: 10px;
+      max-height: 400px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+    }
   }
   .comment {
     position: relative;
@@ -102,6 +109,32 @@
       font-size: 12px;
       span {
         opacity: 0.5;
+      }
+    }
+  }
+
+  .comment-form {
+    width: 100%;
+    border: 1px solid #747474bd;
+    border-radius: 8px;
+    overflow: hidden;
+
+    textarea {
+      width: 90%;
+      resize: none;
+      padding: 5px;
+      outline: none;
+    }
+    button {
+      width: 10%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .mat-icon {
+        font-size: 45px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
     }
   }
