@@ -1,14 +1,36 @@
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    
-    <div class="form-control">
-        <label for="username">username</label>
-        <input type="username" id="username" formControlName="username">
-    </div>
+<div
+  class="h-[calc(100vh-120px)] flex flex-col justify-center align-center max-w-96 m-auto"
+>
+  <form
+    [formGroup]="loginForm"
+    (ngSubmit)="onSubmit()"
+    class="flex flex-col justify-center align-center py-10 px-5 sm:p-10 rounded-xl shadow-xl bg-white"
+  >
+    <h2 class="text-4xl text-center font-semibold text-[#444444] mb-7">
+      Login
+    </h2>
+    <input-text
+      label="Username"
+      placeholder="Enter your username"
+      [formGroup]="loginForm"
+      [controlName]="'username'"
+    >
+    </input-text>
+    <input-text
+      label="Password"
+      placeholder="Enter your password"
+      [formGroup]="loginForm"
+      [controlName]="'password'"
+      [type]="'password'"
+    >
+    </input-text>
 
-    <div class="form-control">
-        <label for="password">Password</label>
-        <input type="password" id="password" formControlName="password">
-    </div>
-
-    <button type="submit">Login</button>
-</form>
+    <button
+      class="bg-gray hover:opacity-70 duration-200 text-white mt-3 p-3 rounded-md disabled:cursor-not-allowed disabled:opacity-70"
+      type="submit"
+      [disabled]="!loginForm.valid"
+    >
+      Login
+    </button>
+  </form>
+</div>

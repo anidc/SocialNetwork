@@ -38,6 +38,9 @@ export class LoginComponent {
           this.accountService.getCurrentUser().subscribe();
           this.router.navigate(['/home']);
         },
+        error: (error) => {
+          this.toastr.error(error.error);
+        },
       });
   }
 }
