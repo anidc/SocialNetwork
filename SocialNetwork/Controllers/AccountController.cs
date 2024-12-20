@@ -35,7 +35,7 @@ namespace SocialNetwork.Controllers
 
             await _accountService.RegisterUser(registerDto);
 
-            return Ok("User registered succesfully");
+            return Ok(new { message = "User registered successfully" });
         }
 
         [Authorize]

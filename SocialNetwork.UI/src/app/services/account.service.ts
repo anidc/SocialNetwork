@@ -32,13 +32,14 @@ export class AccountService {
     password: string,
     email: string
   ): Observable<string> {
-    return this.http.post<string>(
+    return this.http.post(
       `${environment.serverUrl}/api/account/register`,
       {
         username,
         password,
         email,
-      }
+      },
+      { responseType: 'text' }
     );
   }
 

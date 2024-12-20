@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AccountService } from '../../services/account.service';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
@@ -16,7 +17,8 @@ export class RegisterComponent {
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly accountService: AccountService,
-    private readonly router: Router
+    private readonly router: Router,
+    private toastr: ToastrService
   ) {
     this.initRegisterForm();
   }
@@ -43,11 +45,11 @@ export class RegisterComponent {
       )
       .subscribe({
         next: (response) => {
-          alert(response);
+          this.toastr.success(response);
           this.router.navigate(['/login']);
         },
         error: (error) => {
-          console.log(error.error);
+          this.toastr.error(error.error);
         },
       });
   }

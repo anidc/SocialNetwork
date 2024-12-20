@@ -19,6 +19,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { tokenInterceptor } from './interceptor/token-interceptor';
 import { MenuComponent } from './components/menu/menu.component';
 import { MatIconModule } from '@angular/material/icon';
+import { InputTextComponent } from './components/form/input-text.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { MatIconModule } from '@angular/material/icon';
     RegisterComponent,
     HomeComponent,
     MenuComponent,
+    InputTextComponent,
   ],
   imports: [
     BrowserModule,
