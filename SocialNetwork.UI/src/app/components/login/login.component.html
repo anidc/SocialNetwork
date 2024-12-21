@@ -3,7 +3,6 @@
 >
   <form
     [formGroup]="loginForm"
-    (ngSubmit)="onSubmit()"
     class="flex flex-col justify-center align-center py-10 px-5 sm:p-10 rounded-xl shadow-xl bg-white"
   >
     <h2 class="text-4xl text-center font-semibold text-[#444444] mb-7">
@@ -27,12 +26,12 @@
     <a class="text-sm text-blue-800" routerLink="/reset-password"
       >Forgot your password?</a
     >
-    <button
-      class="bg-gray hover:opacity-70 duration-200 text-white mt-3 p-3 rounded-md disabled:cursor-not-allowed disabled:opacity-70"
-      type="submit"
+
+    <input-button
+      [label]="'Login'"
+      (clicked)="onSubmit()"
       [disabled]="!loginForm.valid || isLoading"
     >
-      Login
-    </button>
+    </input-button>
   </form>
 </div>

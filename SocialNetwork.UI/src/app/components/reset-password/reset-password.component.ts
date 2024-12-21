@@ -9,6 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { UpdatePassword } from '../../interfaces/update-password';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-reset-password',
@@ -98,6 +99,11 @@ export class ResetPasswordComponent {
 
       this.accountService
         .resetPassword(this.resetPasswordForm.value.email!)
+        .pipe(
+          finalize(() => {
+            this.isLoading = false;
+          })
+        )
         .subscribe({
           next: (response) => {
             this.toastr.info('Please check your email');
@@ -105,9 +111,6 @@ export class ResetPasswordComponent {
           },
           error: (error) => {
             console.log(error);
-          },
-          complete: () => {
-            this.isLoading = false;
           },
         });
     } else {
@@ -126,6 +129,11 @@ export class ResetPasswordComponent {
       }
       this.accountService
         .updatePassword(this.resetPasswordForm.value as UpdatePassword)
+        .pipe(
+          finalize(() => {
+            this.isLoading = false;
+          })
+        )
         .subscribe({
           next: (response) => {
             this.toastr.success('Password updated successfully');
@@ -133,9 +141,6 @@ export class ResetPasswordComponent {
           },
           error: (error) => {
             this.toastr.error(error.error);
-          },
-          complete: () => {
-            this.isLoading = false;
           },
         });
     }

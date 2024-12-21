@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AccountService } from '../../services/account.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -46,6 +47,11 @@ export class RegisterComponent {
         this.registerForm.value.password,
         this.registerForm.value.email
       )
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
       .subscribe({
         next: (response) => {
           this.toastr.success(response);
@@ -53,9 +59,6 @@ export class RegisterComponent {
         },
         error: (error) => {
           this.toastr.error(error.error);
-        },
-        complete: () => {
-          this.isLoading = false;
         },
       });
   }

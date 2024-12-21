@@ -4,6 +4,7 @@ import { AccountService } from '../../services/account.service';
 import { TokenResponse } from '../../interfaces/token';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -36,6 +37,11 @@ export class LoginComponent {
 
     this.accountService
       .login(this.loginForm.value.username!, this.loginForm.value.password!)
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
       .subscribe({
         next: (response: TokenResponse) => {
           localStorage.setItem('Token', response.token);
@@ -44,9 +50,6 @@ export class LoginComponent {
         },
         error: (error) => {
           this.toastr.error(error.error);
-        },
-        complete: () => {
-          this.isLoading = false;
         },
       });
   }
