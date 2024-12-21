@@ -45,7 +45,10 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
-builder.Services.AddDbContext<ApplicationDBContext>(options => { options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")); });
+builder.Services.AddDbContext<ApplicationDBContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
     {
@@ -55,7 +58,8 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
         options.Password.RequireNonAlphanumeric = true;
         options.Password.RequiredLength = 6;
     })
-    .AddEntityFrameworkStores<ApplicationDBContext>();
+    .AddEntityFrameworkStores<ApplicationDBContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -86,6 +90,8 @@ builder.Services.AddScoped<ICommentService, CommentService>();
 
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 
 builder.Services.AddCors(o => o.AddPolicy("MyPolicy", corsPolicyBuilder =>

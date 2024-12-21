@@ -14,6 +14,8 @@ import { ToastrService } from 'ngx-toastr';
 export class RegisterComponent {
   registerForm!: FormGroup;
 
+  isLoading: boolean = false;
+
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly accountService: AccountService,
@@ -32,6 +34,7 @@ export class RegisterComponent {
   }
 
   register() {
+    this.isLoading = true;
     if (this.registerForm.invalid) {
       console.log('Invalid form');
       return;
@@ -50,6 +53,9 @@ export class RegisterComponent {
         },
         error: (error) => {
           this.toastr.error(error.error);
+        },
+        complete: () => {
+          this.isLoading = false;
         },
       });
   }

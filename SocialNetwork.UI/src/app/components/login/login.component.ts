@@ -18,6 +18,8 @@ export class LoginComponent {
     password: new FormControl('', Validators.required),
   });
 
+  isLoading: boolean = false;
+
   constructor(
     private accountService: AccountService,
     private router: Router,
@@ -30,6 +32,8 @@ export class LoginComponent {
     }
   }
   async onSubmit() {
+    this.isLoading = true;
+
     this.accountService
       .login(this.loginForm.value.username!, this.loginForm.value.password!)
       .subscribe({
@@ -40,6 +44,9 @@ export class LoginComponent {
         },
         error: (error) => {
           this.toastr.error(error.error);
+        },
+        complete: () => {
+          this.isLoading = false;
         },
       });
   }

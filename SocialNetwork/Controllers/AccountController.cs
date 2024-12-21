@@ -12,10 +12,12 @@ namespace SocialNetwork.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
+        private readonly IEmailService _emailService;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountService accountService, IEmailService emailService)
         {
             _accountService = accountService;
+            _emailService = emailService;
         }
 
         [HttpPost("login")]
@@ -35,7 +37,7 @@ namespace SocialNetwork.Controllers
 
             await _accountService.RegisterUser(registerDto);
 
-            return Ok(new { message = "User registered successfully" });
+            return Ok("User registered successfully");
         }
 
         [Authorize]
@@ -50,5 +52,40 @@ namespace SocialNetwork.Controllers
 
             return Ok(result);
         }
+
+        [AllowAnonymous]
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto resetPasswordDto)
+        {
+            if (string.IsNullOrWhiteSpace(resetPasswordDto.Email))
+            {
+                return BadRequest("Invalid request.");
+            }
+
+            try
+            {
+                await _accountService.ResetPasswordAsync(resetPasswordDto);
+                return Ok("Password reset email sent.");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions if necessary
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("update-password")]
+        public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordDto updatePasswordDto)
+        {
+            await _accountService.UpdatePassword(updatePasswordDto);
+
+            return Ok();
+        }
+        
     }
 }

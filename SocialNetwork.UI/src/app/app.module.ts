@@ -20,6 +20,7 @@ import { tokenInterceptor } from './interceptor/token-interceptor';
 import { MenuComponent } from './components/menu/menu.component';
 import { MatIconModule } from '@angular/material/icon';
 import { InputTextComponent } from './components/form/input-text.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { InputTextComponent } from './components/form/input-text.component';
     HomeComponent,
     MenuComponent,
     InputTextComponent,
+    ResetPasswordComponent,
   ],
   imports: [
     BrowserModule,

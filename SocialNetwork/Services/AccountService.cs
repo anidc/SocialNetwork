@@ -1,4 +1,6 @@
-﻿using FirstCast.Application.Services;
+﻿using System.Text;
+using System.Web;
+using FirstCast.Application.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SocialNetwork.Dtos.Account;
@@ -13,13 +15,17 @@ namespace SocialNetwork.Services
         private readonly UserManager<AppUser> _userManager;
         private readonly ITokenService _tokenService;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly IEmailService _emailService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public AccountService(UserManager<AppUser> userManager, ITokenService tokenService,
-            SignInManager<AppUser> signInManager)
+            SignInManager<AppUser> signInManager, IEmailService emailService, IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager;
             _tokenService = tokenService;
             _signInManager = signInManager;
+            _emailService = emailService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<NewUserDto> RegisterUser(RegisterDto registerDto)
@@ -83,6 +89,51 @@ namespace SocialNetwork.Services
             if (user == null) throw ExceptionManager.BadRequest("Something went wrong.");
 
             return user.ToUserDto();
+        }
+
+        public async Task ResetPasswordAsync(ResetPasswordDto resetPasswordDto)
+        {
+            var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email);
+
+            if (user == null) throw ExceptionManager.NotAuthorized();
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var encodedToken = Uri.EscapeDataString(token);
+            var encodedEmail = Uri.EscapeDataString(resetPasswordDto.Email);
+
+            var resetLink = $"http://localhost:4200/reset-password?token={encodedToken}&email={encodedEmail}";
+
+            var path = Path.Combine(AppContext.BaseDirectory, "Templates", "PasswordResetEmail.html");
+
+            var template = await File.ReadAllTextAsync(path);
+            var stringBuilder = new StringBuilder(template);
+
+            stringBuilder.Replace("{{reset_link}}", resetLink);
+            stringBuilder.Replace("{{current_year}}", DateTime.Now.Year.ToString());
+
+            await _emailService.SendEmailAsync(resetPasswordDto.Email, "Reset password", stringBuilder.ToString());
+        }
+
+        public async Task UpdatePassword(UpdatePasswordDto updatePasswordDto)
+        {
+            var user = await _userManager.FindByEmailAsync(updatePasswordDto.Email);
+
+            if (user == null) throw ExceptionManager.BadRequest("");
+
+            if (updatePasswordDto.Password != null &&
+                !updatePasswordDto.Password.Equals(updatePasswordDto.ConfirmPassword))
+                throw ExceptionManager.BadRequest("Passwords do not match!");
+
+            if (updatePasswordDto.Token == null) throw ExceptionManager.AccessDenied();
+
+            var resetResult =
+                await _userManager.ResetPasswordAsync(user, updatePasswordDto.Token, updatePasswordDto.Password);
+
+            if (!resetResult.Succeeded)
+            {
+                throw ExceptionManager.BadRequest("Something went wrong");
+            }
         }
     }
 }

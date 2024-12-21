@@ -24,11 +24,13 @@
       [type]="'password'"
     >
     </input-text>
-
+    <a class="text-sm text-blue-800" routerLink="/reset-password"
+      >Forgot your password?</a
+    >
     <button
       class="bg-gray hover:opacity-70 duration-200 text-white mt-3 p-3 rounded-md disabled:cursor-not-allowed disabled:opacity-70"
       type="submit"
-      [disabled]="!loginForm.valid"
+      [disabled]="!loginForm.valid || isLoading"
     >
       Login
     </button>

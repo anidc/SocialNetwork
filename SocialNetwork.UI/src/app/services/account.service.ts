@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { TokenResponse } from '../interfaces/token';
 import { User } from '../interfaces/user';
+import { UpdatePassword } from '../interfaces/update-password';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
@@ -59,5 +60,22 @@ export class AccountService {
   logout() {
     localStorage.removeItem('Token');
     this.CurrentUser$.next(null);
+  }
+
+  resetPassword(email: string): Observable<string> {
+    return this.http.post(
+      `${environment.serverUrl}/api/account/reset-password`,
+      {
+        email,
+      },
+      { responseType: 'text' }
+    );
+  }
+
+  updatePassword(updatePassword: UpdatePassword) {
+    return this.http.post(
+      `${environment.serverUrl}/api/account/update-password`,
+      updatePassword
+    );
   }
 }
