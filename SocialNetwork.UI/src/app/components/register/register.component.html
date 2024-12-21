@@ -34,12 +34,10 @@
       [type]="'password'"
     ></input-text>
 
-    <button
-      class="bg-gray hover:opacity-70 duration-200 text-white mt-3 p-3 rounded-md disabled:cursor-not-allowed disabled:opacity-70"
-      type="submit"
-      [disabled]="!registerForm.valid"
-    >
-      Register
-    </button>
+    <input-button
+      [label]="'Register'"
+      (clicked)="register()"
+      [disabled]="!registerForm.valid || isLoading"
+    ></input-button>
   </form>
 </div>
