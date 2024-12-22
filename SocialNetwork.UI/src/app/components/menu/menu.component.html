@@ -13,9 +13,20 @@
     <button *ngIf="!(accountService.CurrentUser$ | async)" routerLink="/login">
       Login
     </button>
-    <button *ngIf="accountService.CurrentUser$ | async" (click)="logout()">
-      Logout
+    <button
+      *ngIf="accountService.CurrentUser$ | async"
+      mat-button
+      [matMenuTriggerFor]="menu"
+    >
+      <mat-icon>account_circle</mat-icon>
     </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item>Change email</button>
+      <button mat-menu-item>Change username</button>
+      <button mat-menu-item>Change password</button>
+      <button mat-menu-item (click)="logout()">Logout</button>
+    </mat-menu>
+
     <button
       *ngIf="!(accountService.CurrentUser$ | async)"
       routerLink="/register"

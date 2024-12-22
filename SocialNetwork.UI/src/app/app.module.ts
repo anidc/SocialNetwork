@@ -22,6 +22,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { InputTextComponent } from './components/form/input-text/input-text.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { InputButtonComponent } from './components/form/input-button/input-button.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { ChangePasswordComponent } from './components/change-password/change-password.component';
 
 const pages = [
   LoginComponent,
@@ -33,7 +35,7 @@ const formComponents = [InputTextComponent, InputButtonComponent];
 const components = [MenuComponent];
 
 @NgModule({
-  declarations: [AppComponent, ...pages, ...formComponents, ...components],
+  declarations: [AppComponent, ...pages, ...formComponents, ...components, ChangePasswordComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -42,6 +44,7 @@ const components = [MenuComponent];
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
     MatIconModule,
+    MatMenuModule,
   ],
   providers: [provideHttpClient(withInterceptors([tokenInterceptor]))],
   bootstrap: [AppComponent],
