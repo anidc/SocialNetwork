@@ -23,7 +23,9 @@
     <mat-menu #menu="matMenu">
       <button mat-menu-item>Change email</button>
       <button mat-menu-item>Change username</button>
-      <button mat-menu-item>Change password</button>
+      <button mat-menu-item routerLink="/change-password">
+        Change password
+      </button>
       <button mat-menu-item (click)="logout()">Logout</button>
     </mat-menu>
 

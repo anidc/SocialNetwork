@@ -30,12 +30,13 @@ const pages = [
   RegisterComponent,
   HomeComponent,
   ResetPasswordComponent,
+  ChangePasswordComponent,
 ];
 const formComponents = [InputTextComponent, InputButtonComponent];
 const components = [MenuComponent];
 
 @NgModule({
-  declarations: [AppComponent, ...pages, ...formComponents, ...components, ChangePasswordComponent],
+  declarations: [AppComponent, ...pages, ...formComponents, ...components],
   imports: [
     BrowserModule,
     AppRoutingModule,
