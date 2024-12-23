@@ -5,6 +5,7 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { TokenResponse } from '../interfaces/token';
 import { User } from '../interfaces/user';
 import { UpdatePassword } from '../interfaces/update-password';
+import { ChangePassword } from '../interfaces/change-password';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
@@ -72,10 +73,18 @@ export class AccountService {
     );
   }
 
-  updatePassword(updatePassword: UpdatePassword) {
-    return this.http.post(
+  updatePassword(updatePassword: UpdatePassword): Observable<UpdatePassword> {
+    return this.http.post<UpdatePassword>(
       `${environment.serverUrl}/api/account/update-password`,
       updatePassword
+    );
+  }
+
+  changePassword(changePassword: ChangePassword): Observable<ChangePassword> {
+    return this.http.post<ChangePassword>(
+      `${environment.serverUrl}/api/account/change-password`,
+      changePassword,
+      { responseType: 'json' }
     );
   }
 }

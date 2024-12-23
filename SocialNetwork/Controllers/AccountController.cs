@@ -86,6 +86,17 @@ namespace SocialNetwork.Controllers
 
             return Ok();
         }
+
+        [Authorize]
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
+        {
+            var userId = ClaimsHelper.GetUserId(User);
+
+            await _accountService.ChangePasswordAsync(userId, changePasswordDto);
+
+            return Ok();
+        }
         
     }
 }

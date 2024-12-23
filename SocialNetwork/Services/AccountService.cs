@@ -135,5 +135,16 @@ namespace SocialNetwork.Services
                 throw ExceptionManager.BadRequest("Something went wrong");
             }
         }
+
+        public async Task ChangePasswordAsync(string userId, ChangePasswordDto changePasswordDto)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) throw ExceptionManager.NotAuthorized();
+
+            var result =
+                await _userManager.ChangePasswordAsync(user, changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
+
+            if (!result.Succeeded) throw ExceptionManager.BadRequest("Something went wrong");
+        }
     }
 }

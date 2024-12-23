@@ -9,5 +9,6 @@ namespace SocialNetwork.Interfaces
         Task<UserDto> GetUserByIdAsync(string userId);
         Task ResetPasswordAsync(ResetPasswordDto resetPasswordDto);
         Task UpdatePassword(UpdatePasswordDto updatePasswordDto);
+        Task ChangePasswordAsync(string userId, ChangePasswordDto changePasswordDto);
     }
 }
