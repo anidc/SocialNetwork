@@ -35,4 +35,10 @@ export class PostsService {
       {}
     );
   }
+
+  deletePost(postId: number): Observable<void> {
+    return this.http.delete<void>(
+      `${environment.serverUrl}/api/post/${postId}`
+    );
+  }
 }

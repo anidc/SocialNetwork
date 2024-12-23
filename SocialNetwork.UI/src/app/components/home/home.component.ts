@@ -117,6 +117,19 @@ export class HomeComponent {
     });
   }
 
+  deletePost(postId: number) {
+    this.postService.deletePost(postId).subscribe({
+      next: () => {
+        this.getAllPosts();
+        this.toastr.success('Post deleted successfully');
+      },
+      error: (error) => {
+        this.toastr.error(error.error.toString());
+      },
+    });
+  }
+
+  editPost(postId: number) {}
   showComments(postId: number) {
     var postItem = this.postItems.find(
       (postItem) => postItem.post.id === postId

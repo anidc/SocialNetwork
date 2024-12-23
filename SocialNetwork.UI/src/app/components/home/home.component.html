@@ -19,12 +19,20 @@
   </div>
   <div *ngFor="let postItem of postItems">
     <div class="home-post">
+      <button
+        *ngIf="
+          (accountService.CurrentUser$ | async)?.id == postItem.post.user.id
+        "
+        mat-button
+        [matMenuTriggerFor]="postActions"
+        [matMenuTriggerData]="{ postItem: postItem }"
+        class="dots"
+      >
+        <mat-icon class="more-vert">more_vert</mat-icon>
+      </button>
       <div class="content relative">
         <h3>{{ postItem.post.user.username }}</h3>
         <p class="mt-4">{{ postItem.post.content }}</p>
-        <div class="dots">
-          <mat-icon>more_vert</mat-icon>
-        </div>
         <p class="date">
           <span
             >{{ postItem.post.updatedAt != null ? "edited" : "" }}
@@ -89,3 +97,14 @@
     </div>
   </div>
 </div>
+
+<mat-menu #postActions="matMenu">
+  <ng-template matMenuContent let-postItem="postItem">
+    <button mat-menu-item (click)="editPost(postItem.post.id)">
+      <mat-icon>edit</mat-icon> Edit post
+    </button>
+    <button mat-menu-item (click)="deletePost(postItem.post.id)">
+      <mat-icon>delete</mat-icon> Delete post
+    </button>
+  </ng-template>
+</mat-menu>
