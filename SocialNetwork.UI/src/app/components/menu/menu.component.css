@@ -2,3 +2,9 @@
   max-width: 1200px;
   margin: auto;
 }
+::ng-deep .mat-mdc-menu-panel {
+  background-color: white !important;
+}
+::ng-deep .mat-mdc-menu-content {
+  padding: 0 !important;
+}
