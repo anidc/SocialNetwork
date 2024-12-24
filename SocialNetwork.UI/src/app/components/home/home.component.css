@@ -144,6 +144,8 @@
   position: absolute;
   right: 10px;
   top: 15px;
+  z-index: 20;
+
   .mat-icon {
     transition: 0.3s ease-in-out;
     height: 35px;

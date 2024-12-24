@@ -18,7 +18,10 @@ import { PostItem } from '../../interfaces/post-item';
 export class HomeComponent {
   postItems!: PostItem[];
   postForm!: FormGroup;
+  editPostForm!: FormGroup;
+
   commentForm!: FormGroup;
+
   isAuthenticated = false;
 
   constructor(
@@ -31,6 +34,7 @@ export class HomeComponent {
     this.getAllPosts();
     this.initPublishPost();
     this.initPublishComment();
+    this.initEditPost();
     this.isAuthenticated = this.accountService.isUserAuthenticated();
   }
 
@@ -42,6 +46,7 @@ export class HomeComponent {
             post: post,
             isCommentListOpen: false,
             comments: [],
+            isEditing: false,
           } as PostItem)
       );
     });
@@ -49,6 +54,12 @@ export class HomeComponent {
 
   initPublishPost() {
     this.postForm = this.formBuilder.group({
+      content: ['', [Validators.required, Validators.maxLength(2560)]],
+    });
+  }
+
+  initEditPost() {
+    this.editPostForm = this.formBuilder.group({
       content: ['', [Validators.required, Validators.maxLength(2560)]],
     });
   }
@@ -129,7 +140,38 @@ export class HomeComponent {
     });
   }
 
-  editPost(postId: number) {}
+  editPost(postId: number) {
+    this.postItems.forEach((postItem) => {
+      if (postItem.post.id == postId) {
+        postItem.isEditing = true;
+        this.editPostForm.setValue({
+          content: postItem.post.content,
+        });
+      } else {
+        postItem.isEditing = false;
+      }
+    });
+  }
+
+  updatePost(postId: number) {
+    const updatedContent = this.editPostForm.value.content;
+    console.log(updatedContent);
+    this.postService
+      .updatePost({ content: updatedContent, id: postId } as Post)
+      .subscribe({
+        next: () => {
+          const postItem = this.postItems.find((p) => p.post.id == postId);
+          if (postItem) {
+            postItem.post.content = updatedContent;
+            postItem.isEditing = false;
+          }
+          this.toastr.success('Post updated successfully');
+        },
+        error: (error) => {
+          this.toastr.error(error.error.toString());
+        },
+      });
+  }
   showComments(postId: number) {
     var postItem = this.postItems.find(
       (postItem) => postItem.post.id === postId

@@ -32,7 +32,27 @@
       </button>
       <div class="content relative">
         <h3>{{ postItem.post.user.username }}</h3>
-        <p class="mt-4">{{ postItem.post.content }}</p>
+        <p *ngIf="!postItem.isEditing" class="mt-4">
+          {{ postItem.post.content }}
+        </p>
+        <form [formGroup]="editPostForm" *ngIf="postItem.isEditing">
+          <textarea class="mt-4" formControlName="content"></textarea>
+          <button
+            class="custom-button"
+            type="submit"
+            [disabled]="!editPostForm.value.content || ''"
+            (click)="updatePost(postItem.post.id)"
+          >
+            Save
+          </button>
+          <button
+            class="custom-button"
+            type="button"
+            (click)="postItem.isEditing = false"
+          >
+            Cancel
+          </button>
+        </form>
         <p class="date">
           <span
             >{{ postItem.post.updatedAt != null ? "edited" : "" }}

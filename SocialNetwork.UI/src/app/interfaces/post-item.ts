@@ -5,4 +5,5 @@ export interface PostItem {
   post: Post;
   isCommentListOpen: boolean;
   comments: Comment[];
+  isEditing?: boolean;
 }
