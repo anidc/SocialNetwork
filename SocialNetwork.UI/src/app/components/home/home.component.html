@@ -54,8 +54,11 @@
           </button>
         </form>
         <p class="date">
-          <span
+          <span *ngIf="postItem.post.updatedAt != null"
             >{{ postItem.post.updatedAt != null ? "edited" : "" }}
+            {{ postItem.post.updatedAt | date : "HH:mm dd/MM/yyyy" }}</span
+          >
+          <span *ngIf="postItem.post.updatedAt == null">
             {{ postItem.post.createdAt | date : "HH:mm dd/MM/yyyy" }}</span
           >
         </p>
@@ -91,8 +94,11 @@
                 <p class="comment-text">{{ comment.text }}</p>
               </div>
               <p class="comment-date">
-                <span
+                <span *ngIf="comment.updatedAt != null"
                   >{{ comment.updatedAt != null ? "edited" : "" }}
+                  {{ comment.updatedAt | date : "HH:mm dd/MM/yyyy" }}</span
+                >
+                <span *ngIf="comment.updatedAt == null">
                   {{ comment.createdAt | date : "HH:mm dd/MM/yyyy" }}</span
                 >
               </p>
