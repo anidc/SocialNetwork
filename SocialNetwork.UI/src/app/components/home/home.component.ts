@@ -163,6 +163,7 @@ export class HomeComponent {
           const postItem = this.postItems.find((p) => p.post.id == postId);
           if (postItem) {
             postItem.post.content = updatedContent;
+            postItem.post.updatedAt = new Date();
             postItem.isEditing = false;
           }
           this.toastr.success('Post updated successfully');

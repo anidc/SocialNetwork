@@ -36,9 +36,13 @@
           {{ postItem.post.content }}
         </p>
         <form [formGroup]="editPostForm" *ngIf="postItem.isEditing">
-          <textarea class="mt-4" formControlName="content"></textarea>
+          <textarea
+            class="mt-4 w-full editPostContent"
+            rows="5"
+            formControlName="content"
+          ></textarea>
           <button
-            class="custom-button"
+            class="custom-button w-1/2"
             type="submit"
             [disabled]="!editPostForm.value.content || ''"
             (click)="updatePost(postItem.post.id)"
@@ -46,7 +50,7 @@
             Save
           </button>
           <button
-            class="custom-button"
+            class="custom-button w-1/2"
             type="button"
             (click)="postItem.isEditing = false"
           >
