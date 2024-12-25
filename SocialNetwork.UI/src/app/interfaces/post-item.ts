@@ -1,9 +1,9 @@
-import { Comment } from './comment';
+import { CommentItem } from './comment-item';
 import { Post } from './post';
 
 export interface PostItem {
   post: Post;
   isCommentListOpen: boolean;
-  comments: Comment[];
+  comments: CommentItem[];
   isEditing?: boolean;
 }

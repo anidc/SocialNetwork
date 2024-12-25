@@ -22,4 +22,17 @@ export class CommentsService {
       comment
     );
   }
+
+  updateComment(comment: Comment): Observable<Comment> {
+    return this.http.put<Comment>(
+      `${environment.serverUrl}/api/comment/${comment.id}`,
+      comment
+    );
+  }
+
+  deleteComment(commentId: number): Observable<void> {
+    return this.http.delete<void>(
+      `${environment.serverUrl}/api/comment/${commentId}`
+    );
+  }
 }

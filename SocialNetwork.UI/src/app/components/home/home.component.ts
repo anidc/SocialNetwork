@@ -7,6 +7,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AccountService } from '../../services/account.service';
 import { ToastrService } from 'ngx-toastr';
 import { PostItem } from '../../interfaces/post-item';
+import { CommentItem } from '../../interfaces/comment-item';
 
 @Component({
   selector: 'app-home',
@@ -21,6 +22,7 @@ export class HomeComponent {
   editPostForm!: FormGroup;
 
   commentForm!: FormGroup;
+  editCommentForm!: FormGroup;
 
   isAuthenticated = false;
 
@@ -32,9 +34,12 @@ export class HomeComponent {
     private toastr: ToastrService
   ) {
     this.getAllPosts();
+
     this.initPublishPost();
-    this.initPublishComment();
     this.initEditPost();
+
+    this.initPublishComment();
+
     this.isAuthenticated = this.accountService.isUserAuthenticated();
   }
 
@@ -70,6 +75,13 @@ export class HomeComponent {
     });
   }
 
+  initEditComment(comment: Comment) {
+    this.editCommentForm = this.formBuilder.group({
+      id: [comment.id],
+      text: [comment.text, [Validators.required, Validators.maxLength(2560)]],
+    });
+  }
+
   publishComment(postId: number) {
     if (this.commentForm.invalid) {
       console.log('Invalid comment');
@@ -82,7 +94,10 @@ export class HomeComponent {
         next: (comment) => {
           this.postItems
             .find((postItem) => postItem.post.id === postId)!
-            .comments.push(comment);
+            .comments.push({
+              comment: comment,
+              isEditing: false,
+            });
           this.commentForm.reset();
           this.showComments(postId);
           this.showComments(postId);
@@ -155,7 +170,7 @@ export class HomeComponent {
 
   updatePost(postId: number) {
     const updatedContent = this.editPostForm.value.content;
-    console.log(updatedContent);
+
     this.postService
       .updatePost({ content: updatedContent, id: postId } as Post)
       .subscribe({
@@ -183,7 +198,63 @@ export class HomeComponent {
     this.commentsService
       .getAllCommentsByPost(postId)
       .subscribe((newComments: Comment[]) => {
-        postItem!.comments = newComments;
+        postItem!.comments = newComments.map((c) => ({
+          comment: c,
+          isEditing: false,
+        }));
       });
+  }
+
+  deleteComment(commentId: number) {
+    this.commentsService.deleteComment(commentId).subscribe({
+      next: () => {
+        this.postItems.forEach((postItem) => {
+          postItem.comments.forEach((comment) => {
+            if (comment.comment.id == commentId) {
+              postItem.comments.splice(postItem.comments.indexOf(comment), 1);
+            }
+          });
+        });
+        this.toastr.success('Comment deleted successfully');
+      },
+      error: (error) => {
+        this.toastr.error(error.error.toString());
+      },
+    });
+  }
+
+  editComment(postId: number, commentId: number) {
+    var comment = this.postItems
+      .find((postItem) => postItem.post.id === postId)!
+      .comments.find((comment) => comment.comment.id === commentId);
+
+    this.postItems.forEach((postItem) => {
+      postItem.comments.forEach((comment) => {
+        if (comment.comment.id != commentId) {
+          comment.isEditing = false;
+        }
+      });
+    });
+
+    this.initEditComment(comment!.comment);
+
+    comment!.isEditing = !comment!.isEditing;
+  }
+
+  updateComment(commentItem: CommentItem) {
+    var editFormValue = this.editCommentForm.value;
+
+    this.commentsService.updateComment(editFormValue).subscribe({
+      next: () => {
+        commentItem.comment.text = editFormValue.text;
+        commentItem.comment.updatedAt = new Date();
+        commentItem.isEditing = false;
+
+        this.toastr.success('Comment updated successfully');
+      },
+      error: (error) => {
+        this.toastr.error(error.error.toString());
+      },
+    });
   }
 }

@@ -26,7 +26,7 @@
         mat-button
         [matMenuTriggerFor]="postActions"
         [matMenuTriggerData]="{ postItem: postItem }"
-        class="dots"
+        class="post-dots"
       >
         <mat-icon class="more-vert">more_vert</mat-icon>
       </button>
@@ -37,7 +37,7 @@
         </p>
         <form [formGroup]="editPostForm" *ngIf="postItem.isEditing">
           <textarea
-            class="mt-4 w-full editPostContent"
+            class="mt-4 w-full editPostContent outline-none"
             rows="5"
             formControlName="content"
           ></textarea>
@@ -91,21 +91,84 @@
       </div>
       <div class="comments" *ngIf="postItem.isCommentListOpen">
         <div class="comments-list">
-          <div *ngFor="let comment of postItem.comments">
+          <div *ngFor="let commentItem of postItem.comments">
             <div class="comment">
               <div class="comment-content">
-                <p class="comment-user">{{ comment.user.username }}</p>
-                <p class="comment-text">{{ comment.text }}</p>
+                <p class="comment-user">
+                  {{ commentItem.comment.user.username }}
+                </p>
+                <form
+                  *ngIf="commentItem.isEditing"
+                  [formGroup]="editCommentForm"
+                >
+                  <textarea
+                    class="w-full outline-none p-2"
+                    rows="5"
+                    formControlName="text"
+                  ></textarea>
+                  <button
+                    class="custom-button w-1/2"
+                    type="submit"
+                    (click)="updateComment(commentItem)"
+                  >
+                    Save
+                  </button>
+                  <button
+                    class="custom-button w-1/2"
+                    type="button"
+                    (click)="commentItem.isEditing = false"
+                  >
+                    Cancel
+                  </button>
+                </form>
+                <p *ngIf="!commentItem.isEditing" class="comment-text">
+                  {{ commentItem.comment.text }}
+                </p>
               </div>
               <p class="comment-date">
-                <span *ngIf="comment.updatedAt != null"
-                  >{{ comment.updatedAt != null ? "edited" : "" }}
-                  {{ comment.updatedAt | date : "HH:mm dd/MM/yyyy" }}</span
+                <span *ngIf="commentItem.comment.updatedAt != null"
+                  >{{ commentItem.comment.updatedAt != null ? "edited" : "" }}
+                  {{
+                    commentItem.comment.updatedAt | date : "HH:mm dd/MM/yyyy"
+                  }}</span
                 >
-                <span *ngIf="comment.updatedAt == null">
-                  {{ comment.createdAt | date : "HH:mm dd/MM/yyyy" }}</span
+                <span *ngIf="commentItem.comment.updatedAt == null">
+                  {{
+                    commentItem.comment.createdAt | date : "HH:mm dd/MM/yyyy"
+                  }}</span
                 >
               </p>
+              <button
+                *ngIf="
+                  (accountService.CurrentUser$ | async)?.id ==
+                  commentItem.comment.user.id
+                "
+                mat-button
+                [matMenuTriggerFor]="commentActions"
+                [matMenuTriggerData]="{ comment: commentItem.comment }"
+                class="comment-dots"
+              >
+                <mat-icon class="more-vert">more_vert</mat-icon>
+              </button>
+
+              <mat-menu #commentActions="matMenu">
+                <ng-template matMenuContent>
+                  <button
+                    mat-menu-item
+                    (click)="
+                      editComment(postItem.post.id, commentItem.comment.id)
+                    "
+                  >
+                    <mat-icon>edit</mat-icon> Edit comment
+                  </button>
+                  <button
+                    mat-menu-item
+                    (click)="deleteComment(commentItem.comment.id)"
+                  >
+                    <mat-icon>delete</mat-icon> Delete comment
+                  </button>
+                </ng-template>
+              </mat-menu>
             </div>
           </div>
         </div>
